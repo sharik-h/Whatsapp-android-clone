@@ -1,6 +1,7 @@
 package com.example.whatsapp_clone.settingsPages
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -8,6 +9,7 @@ import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.BlendMode.Companion.Screen
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
@@ -16,23 +18,26 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import androidx.navigation.navOptions
 import com.example.whatsapp_clone.R
+import com.example.whatsapp_clone.data.optionFormat
+import com.example.whatsapp_clone.settingNavigation.settingsScreen
 
-@Preview(showBackground = true)
 @Composable
-fun MainSettings() {
+fun MainSettings(navHostController: NavHostController) {
     val backArrowImg = painterResource(id = R.drawable.arrow_back)
     val userIcon = painterResource(id = R.drawable.circle_img)
     val barCodeImg = painterResource(id = R.drawable.qrcode_img)
     var metaImg = painterResource(id = R.drawable.meta_img)
 
     val optionList = listOf(
-        painterResource(id = R.drawable.key_img) to "Account" to "Privacy,security,change number",
-        painterResource(id = R.drawable.chat_img) to "Chats" to "Theme,wallpapers,chat history",
-        painterResource(id = R.drawable.notification_img) to "Notification" to "Message,group & call tones",
-        painterResource(id = R.drawable.storage_img) to "Storage and data" to "Network usage, auto-download",
-        painterResource(id = R.drawable.info_img) to "Help" to "Help center, contact us, privacy policy",
-        painterResource(id = R.drawable.people_img) to "Invite a friend" to ""
+         optionFormat(icon = painterResource(id = R.drawable.key_img), name = "Account", discription = "Privacy,security,change number", navigation = settingsScreen.accountSetting.route),
+        optionFormat(icon = painterResource(id = R.drawable.chat_img), name = "Chats", discription = "Theme,wallpapers,chat history", navigation = settingsScreen.chatSetting.route),
+        optionFormat(icon = painterResource(id = R.drawable.notification_img), name = "Notification", discription = "Message,group & call history", navigation = settingsScreen.notificationSetting.route),
+        optionFormat(icon = painterResource(id = R.drawable.storage_img), name = "Storage and data", discription = "Network usage, auto-download", navigation = settingsScreen.storageSetting.route),
+        optionFormat(icon = painterResource(id = R.drawable.info_img), name = "Help", discription = "Help center, contact us, privacy policy", navigation = settingsScreen.helpSetting.route),
+        optionFormat(icon = painterResource(id = R.drawable.people_img), name = "Invite a friend", discription = "", navigation = settingsScreen.inviteSettting.route),
     )
 
     Column(modifier = Modifier.fillMaxSize()) {
@@ -52,8 +57,9 @@ fun MainSettings() {
         Row(modifier = Modifier
             .fillMaxWidth()
             .height(95.dp)
-            .padding(start = 10.dp, end = 15.dp),
+            .clickable { navHostController.navigate(settingsScreen.profileSetting.route) },
             verticalAlignment = Alignment.CenterVertically, ) {
+            Spacer(modifier = Modifier.width(10.dp))
             Image(
                 painter = userIcon,
                 contentDescription = "user profile photo",
@@ -65,14 +71,16 @@ fun MainSettings() {
                 Text(text = "Hey there! I a using Whatsapp.", color = Color(0xFF818584))
             }
             Image(painter = barCodeImg, contentDescription = "", Modifier.size(28.dp))
+            Spacer(modifier = Modifier.width(15.dp))
         }
         Divider(thickness = 0.5.dp)
         LazyColumn() {
             items(items = optionList) {
                 settingSample(
-                    painterIcon = it.first.first,
-                    optionTitle = it.first.second,
-                    optionDiscription = it.second
+                    painterIcon = it.icon,
+                    optionTitle = it.name,
+                    optionDiscription = it.discription,
+                    onClik = { navHostController.navigate(it.navigation) }
                 )
             }
         }
@@ -83,14 +91,15 @@ fun MainSettings() {
             textAlign = TextAlign.Center
         )
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
-            Image(painter = metaImg, contentDescription = "", modifier = Modifier.size(16.dp).padding(top = 2.dp))
+            Image(painter = metaImg, contentDescription = "", modifier = Modifier
+                .size(16.dp)
+                .padding(top = 2.dp))
             Text(
                 text = "  Meta",
                 textAlign = TextAlign.Center,
                 fontWeight = FontWeight.Bold
             )
         }
-
     }
 }
 
@@ -98,15 +107,17 @@ fun MainSettings() {
 fun settingSample(
     painterIcon: Painter,
     optionTitle: String,
-    optionDiscription: String
+    optionDiscription: String,
+    onClik: () -> Unit
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .height(75.dp)
-            .padding(start = 20.dp),
+            .clickable { onClik() },
         verticalAlignment = Alignment.CenterVertically
     ) {
+        Spacer(modifier = Modifier.width(20.dp))
         Image(
             painter = painterIcon,
             contentDescription = "",

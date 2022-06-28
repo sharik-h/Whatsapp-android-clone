@@ -64,4 +64,8 @@ dependencies {
     //accompanist
     implementation 'com.google.accompanist:accompanist-pager:0.21.2-beta'
     implementation 'com.google.accompanist:accompanist-pager-indicators:0.21.2-beta'
+
+    //navigation
+    implementation("androidx.navigation:navigation-compose:2.4.0-alpha10")
+    implementation("androidx.navigation:navigation-compose:2.4.0-rc01")
 }

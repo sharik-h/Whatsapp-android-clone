@@ -1,5 +1,7 @@
 package com.example.whatsapp_clone
 
+import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -11,11 +13,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.app.ActivityCompat
+import com.example.whatsapp_clone.settingsPages.inviteFriendPage
 import com.example.whatsapp_clone.ui.theme.Whatsapp_cloneTheme
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
@@ -47,7 +52,7 @@ fun TabSample() {
     val cameraImg = painterResource(id = R.drawable.camera_img)
     val optionsImg = painterResource(id = R.drawable.option_img)
     val searchImg = painterResource(id = R.drawable.search_img)
-
+    val context = LocalContext.current
 
     Column(Modifier.fillMaxSize()) {
         TopAppBar(
@@ -92,7 +97,7 @@ fun TabSample() {
                     TextButton(onClick = { /*TODO*/ }) {
                         Text(text = "Payments")
                     }
-                    TextButton(onClick = { /*TODO*/ }) {
+                    TextButton(onClick = { context.startActivity(Intent(context, settingActivity::class.java)) }) {
                         Text(text = "Settings")
                     }
                 }
