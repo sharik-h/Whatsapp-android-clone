@@ -4,9 +4,7 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.ui.platform.LocalContext
 import androidx.core.app.ActivityCompat
-import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.example.whatsapp_clone.settingNavigation.settingsNavGraph
 
