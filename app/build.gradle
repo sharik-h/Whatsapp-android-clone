@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'com.google.gms.google-services'
 }
 
 android {
@@ -68,4 +69,13 @@ dependencies {
     //navigation
     implementation("androidx.navigation:navigation-compose:2.4.0-alpha10")
     implementation("androidx.navigation:navigation-compose:2.4.0-rc01")
+
+    // Import the Firebase
+    implementation platform('com.google.firebase:firebase-bom:30.2.0')
+    implementation 'com.google.firebase:firebase-analytics-ktx'
+
+    //Firebase Authentication
+    implementation 'com.google.firebase:firebase-auth-ktx'
+
+
 }

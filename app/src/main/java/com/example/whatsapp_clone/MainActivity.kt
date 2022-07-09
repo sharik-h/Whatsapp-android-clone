@@ -20,6 +20,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.app.ActivityCompat
+import androidx.navigation.compose.rememberNavController
+import com.example.whatsapp_clone.LoginNavigation.loginNavGraph
 import com.example.whatsapp_clone.mainPage.callPage
 import com.example.whatsapp_clone.modelItems.callLogModel
 import com.example.whatsapp_clone.settingsPages.inviteFriendPage
@@ -28,14 +30,23 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.pagerTabIndicatorOffset
 import com.google.accompanist.pager.rememberPagerState
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
+
+    val currentuser = FirebaseAuth.getInstance().currentUser
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             Whatsapp_cloneTheme {
-                TabSample()
+                if (currentuser != null) {
+                    TabSample()
+                }else {
+                    val navHostController = rememberNavController()
+                    loginNavGraph(navHostController = navHostController)
+                }
             }
         }
     }

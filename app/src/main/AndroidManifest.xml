@@ -28,6 +28,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".settingActivity" />
+        <activity android:name=".loginPages.AuthOtp" />
     </application>
 
 </manifest>
