@@ -2,10 +2,11 @@ package com.example.whatsapp_clone.loginPages
 
 import android.content.Intent
 import android.os.Bundle
-import android.os.PersistableBundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
@@ -28,6 +29,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.whatsapp_clone.MainActivity
+import com.example.whatsapp_clone.viewmodel.firestoreViewModel
 import com.google.firebase.FirebaseException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.PhoneAuthCredential
@@ -40,6 +42,8 @@ class AuthOtp(): ComponentActivity() {
 
     lateinit var Sotp: String
     var sendStatus = mutableStateOf(0)
+    val viewmodel:firestoreViewModel by viewModels()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -84,7 +88,15 @@ class AuthOtp(): ComponentActivity() {
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     finishAffinity()
-                   this.startActivity(Intent(this, MainActivity::class.java))
+                    val currentuser = FirebaseAuth.getInstance().currentUser
+                    if (currentuser?.uid != null) {
+                        viewmodel.addNewUser(
+                            uid =   currentuser.uid,
+                            Name =  currentuser.displayName.toString(),
+                            Phone = currentuser.phoneNumber?.toLong() ?: 0
+                        )
+                    }
+                    this.startActivity(Intent(this, MainActivity::class.java))
                 } else {
                     Toast.makeText(applicationContext, "failed", Toast.LENGTH_SHORT).show()
                 }
