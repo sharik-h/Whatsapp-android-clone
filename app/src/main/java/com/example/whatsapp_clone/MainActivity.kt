@@ -1,10 +1,10 @@
 package com.example.whatsapp_clone
 
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -19,13 +19,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.app.ActivityCompat
 import androidx.navigation.compose.rememberNavController
 import com.example.whatsapp_clone.LoginNavigation.loginNavGraph
 import com.example.whatsapp_clone.mainPage.callPage
-import com.example.whatsapp_clone.modelItems.callLogModel
-import com.example.whatsapp_clone.settingsPages.inviteFriendPage
+import com.example.whatsapp_clone.mainPage.chatPage
 import com.example.whatsapp_clone.ui.theme.Whatsapp_cloneTheme
+import com.example.whatsapp_clone.viewmodel.firestoreViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.pagerTabIndicatorOffset
@@ -36,6 +35,7 @@ import kotlinx.coroutines.launch
 class MainActivity : ComponentActivity() {
 
     val currentuser = FirebaseAuth.getInstance().currentUser
+    val viewModel: firestoreViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -199,6 +199,7 @@ class MainActivity : ComponentActivity() {
             }
             HorizontalPager(count = 4, state = pagerState,) {
                 if (tabsList[pagerState.currentPage] == "CALLS") callPage()
+                else if (tabsList[pagerState.currentPage] == "CHATS") chatPage(viewModel)
                 else Text(text = tabsList[pagerState.currentPage])
             }
         }

@@ -80,4 +80,7 @@ dependencies {
     //firebase firestore
     implementation 'com.google.firebase:firebase-firestore-ktx'
 
+    //livedata
+    implementation "androidx.compose.runtime:runtime-livedata:$compose_version"
+
 }

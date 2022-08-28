@@ -93,7 +93,7 @@ class AuthOtp(): ComponentActivity() {
                         viewmodel.addNewUser(
                             uid =   currentuser.uid,
                             Name =  currentuser.displayName.toString(),
-                            Phone = currentuser.phoneNumber?.toLong() ?: 0
+                            Phone = currentuser.phoneNumber ?: "0"
                         )
                     }
                     this.startActivity(Intent(this, MainActivity::class.java))

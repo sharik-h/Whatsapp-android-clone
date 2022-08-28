@@ -3,6 +3,7 @@ package com.example.whatsapp_clone.modelItems
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -14,10 +15,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.whatsapp_clone.R
+import com.example.whatsapp_clone.data.detailFormat
 
-@Preview(showBackground = true)
 @Composable
-fun chatItemModel() {
+fun chatItemModel(detailFormat: detailFormat) {
     val imageIcon = painterResource(id = R.drawable.circle_img)
     Column(
        modifier = Modifier
@@ -32,11 +33,11 @@ fun chatItemModel() {
             Spacer(modifier = Modifier.width(5.dp))
             Column {
                 Row(Modifier.fillMaxWidth()) {
-                    Text(text = "Name", fontSize = 18.sp, fontWeight = FontWeight.SemiBold, modifier = Modifier.weight(0.75f))
-                    Text(text = "7/23/22", color = Color(0xFF808080), fontSize = 13.sp)
+                    Text(text = detailFormat.name.toString(), fontSize = 18.sp, fontWeight = FontWeight.SemiBold, modifier = Modifier.weight(0.75f))
+                    Text(text = detailFormat.msgdate.toString(), color = Color(0xFF808080), fontSize = 13.sp)
                     Spacer(modifier = Modifier.width(15.dp))
                 }
-                Text(text = "hello", color = Color(0xFF808080))
+                Text(text = detailFormat.lastmsg.toString(), color = Color(0xFF808080))
             }
         }
     }
