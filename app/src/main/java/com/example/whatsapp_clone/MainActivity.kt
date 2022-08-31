@@ -23,6 +23,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.whatsapp_clone.LoginNavigation.loginNavGraph
 import com.example.whatsapp_clone.mainPage.callPage
 import com.example.whatsapp_clone.mainPage.chatPage
+import com.example.whatsapp_clone.mainPage.statusPage
 import com.example.whatsapp_clone.ui.theme.Whatsapp_cloneTheme
 import com.example.whatsapp_clone.viewmodel.firestoreViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -200,6 +201,7 @@ class MainActivity : ComponentActivity() {
             HorizontalPager(count = 4, state = pagerState,) {
                 if (tabsList[pagerState.currentPage] == "CALLS") callPage()
                 else if (tabsList[pagerState.currentPage] == "CHATS") chatPage(viewModel)
+                else if (tabsList[pagerState.currentPage] == "STATUS") statusPage()
                 else Text(text = tabsList[pagerState.currentPage])
             }
         }
