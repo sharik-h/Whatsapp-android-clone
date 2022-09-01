@@ -1,14 +1,18 @@
 package com.example.whatsapp_clone.chatActivity
 
+import android.content.Intent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -19,7 +23,7 @@ import com.example.whatsapp_clone.R
 
 
 @Composable
-fun chatPerson(name: String) {
+fun chatPerson(name: String, phone: String, msgdate: String) {
     val arrowImg = painterResource(id = R.drawable.arrow_back)
     val userImg = painterResource(id = R.drawable.circle_img)
     val phoneImg = painterResource(id = R.drawable.phone_white)
@@ -32,16 +36,30 @@ fun chatPerson(name: String) {
     val micImg = painterResource(id = R.drawable.mic_img_white)
     val chatBgImg = painterResource(id = R.drawable.chat_background)
     var message by remember { mutableStateOf("") }
+    val context = LocalContext.current
     
-    
-    
-    
+
     Column(modifier = Modifier.fillMaxSize()) {
         TopAppBar(backgroundColor = Color(0xFF008268)) {
             Image(painter = arrowImg, contentDescription = "",Modifier.padding(5.dp) )
-            Image(painter = userImg, contentDescription = "", modifier = Modifier.size(45.dp))
-            Text(text = name, fontSize = 20.sp, color = Color.White, fontWeight = FontWeight.SemiBold)
-            Spacer(modifier = Modifier.weight(0.5f))
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .weight(0.5f)
+                    .clickable {
+                    context.startActivity(
+                        Intent(
+                            context,
+                            chatDetailActivity::class.java
+                        ).putExtra("name", name).putExtra("phone", phone).putExtra("lstseen", msgdate)
+                    )
+                }) {
+
+                Image(painter = userImg, contentDescription = "", modifier = Modifier.size(45.dp))
+                Text(text = name, fontSize = 20.sp, color = Color.White, fontWeight = FontWeight.SemiBold)
+//                Spacer(modifier = Modifier.weight(0.5f))
+
+            }
             Image(painter = videoCamImg, contentDescription = "", modifier = Modifier.padding(9.dp))
             Image(painter = phoneImg, contentDescription = "", modifier = Modifier.padding(9.dp))
             Image(painter = optionsImg, contentDescription = "", modifier = Modifier.padding(9.dp))

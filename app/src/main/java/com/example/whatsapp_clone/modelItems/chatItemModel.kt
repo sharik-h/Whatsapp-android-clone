@@ -29,7 +29,13 @@ fun chatItemModel(detailFormat: detailFormat) {
        modifier = Modifier
            .fillMaxWidth()
            .height(80.dp)
-           .clickable { context.startActivity(Intent(context, chatActivity::class.java).putExtra("name",detailFormat.name)) }) {
+           .clickable {
+               context.startActivity(Intent(context, chatActivity::class.java)
+                       .putExtra("name", detailFormat.name)
+                       .putExtra("phone", detailFormat.phone)
+                       .putExtra("msgdate", detailFormat.msgdate)
+               )
+           }) {
         Row(
             Modifier.fillMaxSize(),
             verticalAlignment = Alignment.CenterVertically

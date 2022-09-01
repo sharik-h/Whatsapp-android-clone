@@ -31,6 +31,7 @@
         <activity android:name=".loginPages.AuthOtp" />
         <activity android:name=".mainPage.newChatActivity"/>
         <activity android:name=".chatActivity.chatActivity"/>
+        <activity android:name=".chatActivity.chatDetailActivity"/>
     </application>
 
 </manifest>
