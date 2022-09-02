@@ -25,7 +25,10 @@ import com.example.whatsapp_clone.viewmodel.firestoreViewModel
 fun chatPage(viewModel: firestoreViewModel) {
 
     viewModel.getData()
+    viewModel.getAllUsers()
     val userDetails by viewModel.userDetails.observeAsState(initial = emptyList())
+    val availableUsers by viewModel.allAvailableUsers.observeAsState(initial = emptyList())
+    val allusers = availableUsers.toTypedArray()
     val context = LocalContext.current
 
     Column(
@@ -36,7 +39,7 @@ fun chatPage(viewModel: firestoreViewModel) {
             .fillMaxSize()
     ) {
         FloatingActionButton(
-            onClick = { context.startActivity(Intent(context, newChatActivity::class.java)) },
+            onClick = { context.startActivity(Intent(context, newChatActivity::class.java).putExtra("availableusers", allusers)) },
             modifier = Modifier.size(57.dp),
             shape = RoundedCornerShape(50),
             containerColor = Color(0xFF01AA88)

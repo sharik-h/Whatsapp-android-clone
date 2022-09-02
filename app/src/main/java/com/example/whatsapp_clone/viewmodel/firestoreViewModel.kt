@@ -15,7 +15,7 @@ class firestoreViewModel: ViewModel() {
     val database = Firebase.firestore
     val currentUser = FirebaseAuth.getInstance().uid
     val userDetails: MutableLiveData<List<detailFormat>> = MutableLiveData<List<detailFormat>>()
-
+    var allAvailableUsers : MutableLiveData<List<String>> = MutableLiveData<List<String>>()
 
     fun addNewUser(
         uid: String,
@@ -24,8 +24,8 @@ class firestoreViewModel: ViewModel() {
     ) {
         val details = detailFormat(uid,Name,Phone)
         database
-            .collection("whatsappclone/users/${uid}")
-            .add(details)
+            .document("users/$Phone")
+            .set(details)
     }
 
     fun getData(): MutableList<detailFormat> {
@@ -49,5 +49,17 @@ class firestoreViewModel: ViewModel() {
         return activeChats
     }
 
+    fun getAllUsers() {
+        var allUsers: MutableList<String> = mutableListOf()
+         database.collection("users")
+             .addSnapshotListener { querySnapshot, error ->
+                 querySnapshot?.let {
+                     querySnapshot.documents.forEach { doc->
+                         allUsers.add(doc.id)
+                     }
+                     allAvailableUsers.value = allUsers
+                 }
+             }
+    }
 
 }

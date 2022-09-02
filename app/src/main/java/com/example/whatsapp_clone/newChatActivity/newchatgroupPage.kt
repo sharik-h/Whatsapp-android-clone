@@ -33,7 +33,7 @@ class newChatActivity(): ComponentActivity() {
             newChatGroupPage()
         }
     }
-}
+
 
 @SuppressLint("Range")
 @Composable
@@ -45,6 +45,7 @@ fun newChatGroupPage() {
     val peopleimg = painterResource(id = R.drawable.people_img_white)
     val personimg = painterResource(id = R.drawable.add_person)
     val qrcode = painterResource(id = R.drawable.qrcode_grey)
+    val users = intent.getStringArrayExtra("availableusers")!!.toList()
 
     Column(modifier = Modifier.fillMaxSize()) {
         TopAppBar(backgroundColor = Color(0xFF008268)) {
@@ -127,11 +128,14 @@ fun newChatGroupPage() {
             if (cursor != null) {
                 if (cursor.count > 0) {
                     while (cursor.moveToNext()) {
-                        newMembers(
-                            Icon = null,
-                            Name = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME)),
-                            info = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER))
-                        )
+                        val num = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)).toString()
+                        if (users.contains(num)) {
+                            newMembers(
+                                Icon = null,
+                                Name = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME)),
+                                info = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER))
+                            )
+                        }
                     }
 
                 }
@@ -164,4 +168,5 @@ fun newMembers(
             Text(text = info, color = Color(0xFF818584))
         }
     }
+}
 }
