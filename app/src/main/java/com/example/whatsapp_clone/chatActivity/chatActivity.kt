@@ -12,7 +12,7 @@ class chatActivity:ComponentActivity() {
         val phone = intent.getStringExtra("phone")
         val msgdate = intent.getStringExtra("msgdate")
         setContent {
-            chatPerson(name!!, phone!!, msgdate!!)
+            chatPerson(name!!, phone!!, msgdate)
         }
     }
 }

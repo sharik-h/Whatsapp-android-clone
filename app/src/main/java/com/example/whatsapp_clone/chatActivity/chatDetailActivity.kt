@@ -13,7 +13,7 @@ class chatDetailActivity: ComponentActivity() {
         val phone = intent.getStringExtra("phone")
         val lstseen = intent.getStringExtra("lstseen")
         setContent {
-            chatDetailsPage(name!!, phone!!, lstseen!!)
+            chatDetailsPage(name!!, phone!!, lstseen)
         }
     }
 }

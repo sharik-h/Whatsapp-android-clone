@@ -23,7 +23,7 @@ import com.example.whatsapp_clone.R
 
 
 @Composable
-fun chatPerson(name: String, phone: String, msgdate: String) {
+fun chatPerson(name: String, phone: String, msgdate: String?) {
     val arrowImg = painterResource(id = R.drawable.arrow_back)
     val userImg = painterResource(id = R.drawable.circle_img)
     val phoneImg = painterResource(id = R.drawable.phone_white)

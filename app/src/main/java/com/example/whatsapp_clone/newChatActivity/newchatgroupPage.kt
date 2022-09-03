@@ -1,10 +1,13 @@
 package com.example.whatsapp_clone.mainPage
 
 import android.annotation.SuppressLint
+import android.content.Intent
+import android.graphics.drawable.Icon
 import android.os.Bundle
 import android.provider.ContactsContract
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.IconButton
@@ -22,11 +25,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.whatsapp_clone.R
-
-
+import com.example.whatsapp_clone.chatActivity.chatActivity
+import com.example.whatsapp_clone.viewmodel.firestoreViewModel
 
 
 class newChatActivity(): ComponentActivity() {
+
+    val viewmodel : firestoreViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -151,11 +157,16 @@ fun newMembers(
     info: String,
 ) {
     val noUserIcons = painterResource(id = R.drawable.circle_img)
+    val context = LocalContext.current
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .height(61.dp)
-            .clickable {},
+            .clickable {
+                context.startActivity(Intent(context, chatActivity::class.java).putExtra("name",Name).putExtra("phone",info))
+                viewmodel.isUserPresent(Name,info)
+                finish()
+            },
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center
     ) {

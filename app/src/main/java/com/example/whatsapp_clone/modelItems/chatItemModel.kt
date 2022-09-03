@@ -46,10 +46,14 @@ fun chatItemModel(detailFormat: detailFormat) {
             Column {
                 Row(Modifier.fillMaxWidth()) {
                     Text(text = detailFormat.name.toString(), fontSize = 18.sp, fontWeight = FontWeight.SemiBold, modifier = Modifier.weight(0.75f))
-                    Text(text = detailFormat.msgdate.toString(), color = Color(0xFF808080), fontSize = 13.sp)
+                   detailFormat.msgdate?.let {
+                       Text(text = detailFormat.msgdate.toString(), color = Color(0xFF808080), fontSize = 13.sp)
+                   }
                     Spacer(modifier = Modifier.width(15.dp))
                 }
-                Text(text = detailFormat.lastmsg.toString(), color = Color(0xFF808080))
+                detailFormat.lastmsg?.let {
+                    Text(text = detailFormat.lastmsg.toString(), color = Color(0xFF808080))
+                }
             }
         }
     }

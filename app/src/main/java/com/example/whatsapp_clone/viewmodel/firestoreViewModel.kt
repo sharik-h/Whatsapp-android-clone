@@ -62,4 +62,22 @@ class firestoreViewModel: ViewModel() {
              }
     }
 
+    fun addNewChat(name:String, number: String) {
+        database
+            .document("whatsappclone/chats/$currentUser/$number")
+            .set(detailFormat(name = name, phone = number))
+    }
+
+    fun isUserPresent(name:String ,number: String) {
+       database
+           .document("whatsappclone/chats/$currentUser/$number")
+           .get()
+           .addOnSuccessListener {
+              if (!it.exists()){
+                  addNewChat(name,number)
+              }
+           }
+
+    }
+
 }

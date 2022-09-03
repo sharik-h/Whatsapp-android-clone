@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.sp
 import com.example.whatsapp_clone.R
 
 @Composable
-fun chatDetailsPage(name: String, phone: String, lstseen: String) {
+fun chatDetailsPage(name: String, phone: String, lstseen: String?) {
     val backImg = painterResource(id = R.drawable.arrow_back_grey)
     val optionImg = painterResource(id = R.drawable.option_grey)
     val userImg = painterResource(id = R.drawable.circle_img)
@@ -61,14 +61,17 @@ fun chatDetailsPage(name: String, phone: String, lstseen: String) {
                 Spacer(modifier = Modifier.height(5.dp))
                 Text(text = phone, color = Color(0xFF797979), fontSize = 18.sp)
                 Spacer(modifier = Modifier.height(5.dp))
-                Box(
-                    modifier = Modifier
-                        .background(color = Color(0xFFF7F7F7))
-                        .height(24.dp)
-                        .padding(top = 3.dp)) {
-                    Text(text = " Last seen $lstseen ", color = Color(0xFF919191))
+                lstseen?.let{
+                    Box(
+                        modifier = Modifier
+                            .background(color = Color(0xFFF7F7F7))
+                            .height(24.dp)
+                            .padding(top = 3.dp)
+                    ) {
+                        Text(text = " Last seen $lstseen ", color = Color(0xFF919191))
+                    }
                 }
-                
+
                 Spacer(modifier = Modifier.height(20.dp))
                 Row() {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
