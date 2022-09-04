@@ -1,9 +1,7 @@
 package com.example.whatsapp_clone.chatActivity
 
 import android.content.Intent
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -19,11 +17,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.whatsapp_clone.R
-
+import com.example.whatsapp_clone.viewmodel.firestoreViewModel
 
 
 @Composable
-fun chatPerson(name: String, phone: String, msgdate: String?) {
+fun chatPerson(uid:String, name: String, phone: String, msgdate: String?, viewModel: firestoreViewModel) {
     val arrowImg = painterResource(id = R.drawable.arrow_back)
     val userImg = painterResource(id = R.drawable.circle_img)
     val phoneImg = painterResource(id = R.drawable.phone_white)
@@ -35,88 +33,135 @@ fun chatPerson(name: String, phone: String, msgdate: String?) {
     val bCircle = painterResource(id = R.drawable.circlebg_img)
     val micImg = painterResource(id = R.drawable.mic_img_white)
     val chatBgImg = painterResource(id = R.drawable.chat_background)
+    val sendImg = painterResource(id = R.drawable.send_white)
+    var micOrSend = Pair(micImg, 30)
     var message by remember { mutableStateOf("") }
     val context = LocalContext.current
-    
+
 
     Column(modifier = Modifier.fillMaxSize()) {
         TopAppBar(backgroundColor = Color(0xFF008268)) {
-            Image(painter = arrowImg, contentDescription = "",Modifier.padding(5.dp) )
+            Image(painter = arrowImg, contentDescription = "", Modifier.padding(5.dp))
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
                     .weight(0.5f)
                     .clickable {
-                    context.startActivity(
-                        Intent(
-                            context,
-                            chatDetailActivity::class.java
-                        ).putExtra("name", name).putExtra("phone", phone).putExtra("lstseen", msgdate)
-                    )
-                }) {
+                        context.startActivity(
+                            Intent(
+                                context,
+                                chatDetailActivity::class.java
+                            )
+                                .putExtra("name", name)
+                                .putExtra("phone", phone)
+                                .putExtra("lstseen", msgdate)
+                        )
+                    }) {
 
-                Image(painter = userImg, contentDescription = "", modifier = Modifier.size(45.dp))
-                Text(text = name, fontSize = 20.sp, color = Color.White, fontWeight = FontWeight.SemiBold)
+                Image(
+                    painter = userImg,
+                    contentDescription = "",
+                    modifier = Modifier.size(45.dp)
+                )
+                Text(
+                    text = name,
+                    fontSize = 20.sp,
+                    color = Color.White,
+                    fontWeight = FontWeight.SemiBold
+                )
 //                Spacer(modifier = Modifier.weight(0.5f))
 
             }
-            Image(painter = videoCamImg, contentDescription = "", modifier = Modifier.padding(9.dp))
-            Image(painter = phoneImg, contentDescription = "", modifier = Modifier.padding(9.dp))
-            Image(painter = optionsImg, contentDescription = "", modifier = Modifier.padding(9.dp))
+            Image(
+                painter = videoCamImg,
+                contentDescription = "",
+                modifier = Modifier.padding(9.dp)
+            )
+            Image(
+                painter = phoneImg,
+                contentDescription = "",
+                modifier = Modifier.padding(9.dp)
+            )
+            Image(
+                painter = optionsImg,
+                contentDescription = "",
+                modifier = Modifier.padding(9.dp)
+            )
         }
         Image(painter = chatBgImg, contentDescription = "", modifier = Modifier.fillMaxSize())
-    }
-    Column(
-        verticalArrangement = Arrangement.Bottom,
-        modifier = Modifier.fillMaxSize(),
-    ) {
-        BottomAppBar(
-            backgroundColor = Color.Transparent,
-            elevation = 0.dp,
-            modifier = Modifier
-                .height(70.dp)
-                .fillMaxWidth()
-        ) {
-            Row(modifier = Modifier
-                .clip(RoundedCornerShape(50))
-                .background(Color.White)
-                .height(45.dp)
-                .weight(0.75f)
-            )
-            {
-
-                IconButton(onClick = { /*TODO*/ }) {
-                    Image(painter = tagFaceImg, contentDescription = "",Modifier.size(25.dp))
-                }
-                TextField(
-                    value = message,
-                    onValueChange = { message = it },
-                    placeholder = { Text(text = "Message")},
-                    modifier = Modifier.weight(0.5f),
-                    colors = TextFieldDefaults.textFieldColors(
-                        backgroundColor = Color.White,
-                        focusedIndicatorColor = Color.Transparent,
-                        unfocusedIndicatorColor = Color.Transparent,
-                    )
-                )
-                IconButton(onClick = { /*TODO*/ }) {
-                    Image(painter = attachFileImg, contentDescription = "")
-                }
-                IconButton(onClick = { /*TODO*/ }) {
-                    Image(painter = cameraImg, contentDescription = "")
-                }
-            }
-
-            Box() {
-                Image(painter = bCircle , contentDescription = "" ,Modifier.size(60.dp))
-                IconButton(onClick = { /*TODO*/ }) {
-                    Image(painter = micImg, contentDescription = "",
-                        Modifier
-                            .padding(15.dp)
-                            .size(30.dp))
-                }
-            }
-            
         }
-    }
+        Column(
+            verticalArrangement = Arrangement.Bottom,
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState()),
+        ) {
+            BottomAppBar(
+                backgroundColor = Color.Transparent,
+                elevation = 0.dp,
+                modifier = Modifier
+                    .height(70.dp)
+                    .fillMaxWidth()
+            ) {
+                Row(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(50))
+                        .background(Color.White)
+                        .height(45.dp)
+                        .weight(0.75f)
+                )
+                {
+
+                    IconButton(onClick = { /*TODO*/ }) {
+                        Image(painter = tagFaceImg, contentDescription = "", Modifier.size(25.dp))
+                    }
+                    TextField(
+                        value = message,
+                        onValueChange = { message = it },
+                        placeholder = { Text(text = "Message") },
+                        modifier = Modifier.weight(0.5f),
+                        colors = TextFieldDefaults.textFieldColors(
+                            backgroundColor = Color.White,
+                            focusedIndicatorColor = Color.Transparent,
+                            unfocusedIndicatorColor = Color.Transparent,
+                        )
+                    )
+                    IconButton(onClick = { /*TODO*/ }) {
+                        Image(painter = attachFileImg, contentDescription = "")
+                    }
+                    if (message == "") {
+                        IconButton(onClick = { /*TODO*/ }) {
+                            Image(painter = cameraImg, contentDescription = "")
+                        }
+                    }
+                }
+
+                var padd = 15.dp
+                if (message != "")  {
+                    micOrSend =  Pair(sendImg, 23)
+                    padd = 19.dp
+                }
+                else {
+                    micOrSend = Pair(micImg, 30)
+                    padd = 15.dp
+                }
+                Box() {
+                    Image(painter = bCircle, contentDescription = "", Modifier.size(60.dp))
+                    IconButton(onClick = {
+                        if (message != ""){
+                            viewModel.sendMessage(uid,phone,message)
+                            message = ""
+                        }
+                    }) {
+                        Image(
+                            painter = micOrSend.first,
+                            contentDescription = "",
+                            alignment = Alignment.Center,
+                            modifier = Modifier.padding(padd).size(micOrSend.second.dp)
+                        )
+                    }
+                }
+
+            }
+        }
 }

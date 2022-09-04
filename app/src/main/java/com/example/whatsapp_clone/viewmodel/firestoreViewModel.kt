@@ -6,16 +6,22 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.whatsapp_clone.data.detailFormat
+import com.example.whatsapp_clone.data.messageFormat
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import java.time.LocalDate
+import java.time.LocalTime
 
 class firestoreViewModel: ViewModel() {
 
     val database = Firebase.firestore
     val currentUser = FirebaseAuth.getInstance().uid
+    val myPhone = FirebaseAuth.getInstance().currentUser?.phoneNumber
     val userDetails: MutableLiveData<List<detailFormat>> = MutableLiveData<List<detailFormat>>()
     var allAvailableUsers : MutableLiveData<List<String>> = MutableLiveData<List<String>>()
+    val currentTime = LocalTime.now().toString()
+    val currentDate = LocalDate.now().toString()
 
     fun addNewUser(
         uid: String,
@@ -78,6 +84,17 @@ class firestoreViewModel: ViewModel() {
               }
            }
 
+    }
+
+    fun sendMessage(uid:String, phone: String, message: String) {
+        val msg1 = messageFormat(1,message,currentTime,currentDate)
+        database.collection("chats/$currentUser/$phone")
+           .add(msg1)
+        val msg2 = messageFormat(2, message, currentTime, currentDate)
+        database.collection("chats/$uid/$myPhone")
+            .add(msg2)
+        database.document("whatsappclone/chats/$currentUser/$phone")
+            .update(mapOf("lastmsg" to message, "msgdate" to currentDate))
     }
 
 }
