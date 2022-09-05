@@ -20,8 +20,8 @@ class firestoreViewModel: ViewModel() {
     val myPhone = FirebaseAuth.getInstance().currentUser?.phoneNumber
     val userDetails: MutableLiveData<List<detailFormat>> = MutableLiveData<List<detailFormat>>()
     var allAvailableUsers : MutableLiveData<List<String>> = MutableLiveData<List<String>>()
-    val currentTime = LocalTime.now().toString()
-    val currentDate = LocalDate.now().toString()
+    val chats: MutableLiveData<List<messageFormat>> = MutableLiveData<List<messageFormat>>()
+
 
     fun addNewUser(
         uid: String,
@@ -87,14 +87,34 @@ class firestoreViewModel: ViewModel() {
     }
 
     fun sendMessage(uid:String, phone: String, message: String) {
-        val msg1 = messageFormat(1,message,currentTime,currentDate)
-        database.collection("chats/$currentUser/$phone")
-           .add(msg1)
-        val msg2 = messageFormat(2, message, currentTime, currentDate)
-        database.collection("chats/$uid/$myPhone")
-            .add(msg2)
+        val currentTime = LocalTime.now().toString()
+        val currentDate = LocalDate.now().toString()
+        val msg1 = messageFormat("1",message,currentTime,currentDate)
+        database.document("chats/$currentUser/$phone/$currentDate$currentTime")
+           .set(msg1)
+        val msg2 = messageFormat("2", message, currentTime, currentDate)
+        database.document("chats/$uid/$myPhone/$currentDate$currentTime")
+            .set(msg2)
         database.document("whatsappclone/chats/$currentUser/$phone")
             .update(mapOf("lastmsg" to message, "msgdate" to currentDate))
+    }
+
+    fun loadChat(phone: String) {
+        database
+            .collection("chats/$currentUser/$phone")
+            .addSnapshotListener { value, error ->
+                value?.let { value ->
+                    val document = value.documents
+                    val chatArray = ArrayList<messageFormat>()
+                    document.forEach {
+                        val perChat = it.toObject(messageFormat::class.java)
+                        perChat?.let {
+                            chatArray.add(perChat)
+                        }
+                    }
+                    chats.value = chatArray
+                }
+            }
     }
 
 }

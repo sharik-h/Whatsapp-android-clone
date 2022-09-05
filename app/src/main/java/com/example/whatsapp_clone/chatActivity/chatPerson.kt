@@ -3,9 +3,12 @@ package com.example.whatsapp_clone.chatActivity
 import android.content.Intent
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -13,7 +16,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.whatsapp_clone.R
@@ -22,6 +24,9 @@ import com.example.whatsapp_clone.viewmodel.firestoreViewModel
 
 @Composable
 fun chatPerson(uid:String, name: String, phone: String, msgdate: String?, viewModel: firestoreViewModel) {
+
+    viewModel.loadChat(phone = phone)
+
     val arrowImg = painterResource(id = R.drawable.arrow_back)
     val userImg = painterResource(id = R.drawable.circle_img)
     val phoneImg = painterResource(id = R.drawable.phone_white)
@@ -36,10 +41,117 @@ fun chatPerson(uid:String, name: String, phone: String, msgdate: String?, viewMo
     val sendImg = painterResource(id = R.drawable.send_white)
     var micOrSend = Pair(micImg, 30)
     var message by remember { mutableStateOf("") }
+    val chats by viewModel.chats.observeAsState(initial = emptyList())
     val context = LocalContext.current
 
 
+    Column(Modifier.fillMaxSize()) {
+                Image(painter = chatBgImg, contentDescription = "", modifier = Modifier.fillMaxSize())
+    }
+
     Column(modifier = Modifier.fillMaxSize()) {
+//        TopAppBar(backgroundColor = Color(0xFF008268)) {
+//            Image(painter = arrowImg, contentDescription = "", Modifier.padding(5.dp))
+//            Row(
+//                verticalAlignment = Alignment.CenterVertically,
+//                modifier = Modifier
+//                    .weight(0.5f)
+//                    .clickable {
+//                        context.startActivity(
+//                            Intent(
+//                                context,
+//                                chatDetailActivity::class.java
+//                            )
+//                                .putExtra("name", name)
+//                                .putExtra("phone", phone)
+//                                .putExtra("lstseen", msgdate)
+//                        )
+//                    }) {
+//
+//                Image(
+//                    painter = userImg,
+//                    contentDescription = "",
+//                    modifier = Modifier.size(45.dp)
+//                )
+//                Text(
+//                    text = name,
+//                    fontSize = 20.sp,
+//                    color = Color.White,
+//                    fontWeight = FontWeight.SemiBold
+//                )
+////                Spacer(modifier = Modifier.weight(0.5f))
+//
+//            }
+//            Image(
+//                painter = videoCamImg,
+//                contentDescription = "",
+//                modifier = Modifier.padding(9.dp)
+//            )
+//            Image(
+//                painter = phoneImg,
+//                contentDescription = "",
+//                modifier = Modifier.padding(9.dp)
+//            )
+//            Image(
+//                painter = optionsImg,
+//                contentDescription = "",
+//                modifier = Modifier.padding(9.dp)
+//            )
+//        }
+//        Column(
+//            verticalArrangement = Arrangement.Bottom,
+//            modifier = Modifier
+//                .fillMaxSize()
+//                .padding(bottom = 70.dp)) {
+//            LazyColumn(modifier = Modifier.fillMaxWidth()){
+//               items(items = chats) { item ->
+//                   Spacer(modifier = Modifier.height(2.dp))
+//                   if (item.id == "1") {
+//                       Row(
+//                           horizontalArrangement = Arrangement.Start,
+//                           modifier = Modifier
+//                               .fillMaxWidth()
+//                               .padding(horizontal = 15.dp)
+//                       ) {
+//                           Box(
+//                               Modifier
+//                                   .clip(RoundedCornerShape(30))
+//                                   .background(Color.White)
+//                                   .padding(10.dp)
+//                              ) {
+//                               Text(text = item.message.toString())
+//                           }
+//                       }
+//                   }else {
+//                       Row(
+//                           horizontalArrangement = Arrangement.End,
+//                           modifier = Modifier
+//                               .fillMaxWidth()
+//                               .padding(horizontal = 15.dp)
+//                       ) {
+//                           Box(
+//                               Modifier
+//                                   .clip(RoundedCornerShape(30))
+//                                   .background(Color(0xFFDBFFD0))
+//                                   .padding(10.dp)
+//                           ) {
+//                               Text(text = item.message.toString())
+//                           }
+//                       }
+//                   }
+//               }
+//            }
+//        }
+    }
+
+
+    Column(
+        verticalArrangement = Arrangement.Bottom,
+        modifier = Modifier
+            .fillMaxSize()
+//            .verticalScroll(rememberScrollState()),
+    ) {
+
         TopAppBar(backgroundColor = Color(0xFF008268)) {
             Image(painter = arrowImg, contentDescription = "", Modifier.padding(5.dp))
             Row(
@@ -88,14 +200,52 @@ fun chatPerson(uid:String, name: String, phone: String, msgdate: String?, viewMo
                 modifier = Modifier.padding(9.dp)
             )
         }
-        Image(painter = chatBgImg, contentDescription = "", modifier = Modifier.fillMaxSize())
-        }
         Column(
             verticalArrangement = Arrangement.Bottom,
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState()),
+            modifier = Modifier.weight(0.8f)
         ) {
+            LazyColumn(modifier = Modifier.fillMaxWidth()){
+                items(items = chats) { item ->
+                    Spacer(modifier = Modifier.height(2.dp))
+                    if (item.id == "1") {
+                        Row(
+                            horizontalArrangement = Arrangement.Start,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 15.dp)
+                        ) {
+                            Box(
+                                Modifier
+                                    .clip(RoundedCornerShape(30))
+                                    .background(Color.White)
+                                    .padding(10.dp)
+                            ) {
+                                Text(text = item.message.toString())
+                            }
+                        }
+                    }else {
+                        Row(
+                            horizontalArrangement = Arrangement.End,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 15.dp)
+                        ) {
+                            Box(
+                                Modifier
+                                    .clip(RoundedCornerShape(30))
+                                    .background(Color(0xFFDBFFD0))
+                                    .padding(10.dp)
+                            ) {
+                                Text(text = item.message.toString())
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+
+
             BottomAppBar(
                 backgroundColor = Color.Transparent,
                 elevation = 0.dp,
