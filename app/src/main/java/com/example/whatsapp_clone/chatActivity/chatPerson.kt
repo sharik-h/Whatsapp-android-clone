@@ -23,7 +23,7 @@ import com.example.whatsapp_clone.viewmodel.firestoreViewModel
 
 
 @Composable
-fun chatPerson(uid:String, name: String, phone: String, msgdate: String?, viewModel: firestoreViewModel) {
+fun chatPerson( name: String, phone: String, msgdate: String?, viewModel: firestoreViewModel) {
 
     viewModel.loadChat(phone = phone)
 
@@ -207,7 +207,7 @@ fun chatPerson(uid:String, name: String, phone: String, msgdate: String?, viewMo
             LazyColumn(modifier = Modifier.fillMaxWidth()){
                 items(items = chats) { item ->
                     Spacer(modifier = Modifier.height(2.dp))
-                    if (item.id == "1") {
+                    if (item.id == "2") {
                         Row(
                             horizontalArrangement = Arrangement.Start,
                             modifier = Modifier
@@ -299,7 +299,7 @@ fun chatPerson(uid:String, name: String, phone: String, msgdate: String?, viewMo
                     Image(painter = bCircle, contentDescription = "", Modifier.size(60.dp))
                     IconButton(onClick = {
                         if (message != ""){
-                            viewModel.sendMessage(uid,phone,message)
+                            viewModel.sendMessage(phone,message)
                             message = ""
                         }
                     }) {

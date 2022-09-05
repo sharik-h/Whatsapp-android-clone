@@ -10,13 +10,12 @@ class chatActivity:ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val uid = intent.getStringExtra("uid")
         val name = intent.getStringExtra("name")
         val phone = intent.getStringExtra("phone")
         val msgdate = intent.getStringExtra("msgdate")
         val viewModel: firestoreViewModel by viewModels()
         setContent {
-            chatPerson(uid!!,name!!, phone!!, msgdate, viewModel)
+            chatPerson(name!!, phone!!, msgdate, viewModel)
         }
     }
 }

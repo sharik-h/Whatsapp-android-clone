@@ -31,7 +31,6 @@ fun chatItemModel(detailFormat: detailFormat) {
            .height(80.dp)
            .clickable {
                context.startActivity(Intent(context, chatActivity::class.java)
-                   .putExtra("uid", detailFormat.uid)
                    .putExtra("name", detailFormat.name)
                    .putExtra("phone", detailFormat.phone)
                    .putExtra("msgdate", detailFormat.msgdate)

@@ -86,14 +86,14 @@ class firestoreViewModel: ViewModel() {
 
     }
 
-    fun sendMessage(uid:String, phone: String, message: String) {
+    fun sendMessage(phone: String, message: String) {
         val currentTime = LocalTime.now().toString()
         val currentDate = LocalDate.now().toString()
         val msg1 = messageFormat("1",message,currentTime,currentDate)
-        database.document("chats/$currentUser/$phone/$currentDate$currentTime")
+        database.document("chats/$myPhone/$phone/$currentDate$currentTime")
            .set(msg1)
         val msg2 = messageFormat("2", message, currentTime, currentDate)
-        database.document("chats/$uid/$myPhone/$currentDate$currentTime")
+        database.document("chats/$phone/$myPhone/$currentDate$currentTime")
             .set(msg2)
         database.document("whatsappclone/chats/$currentUser/$phone")
             .update(mapOf("lastmsg" to message, "msgdate" to currentDate))
@@ -101,7 +101,7 @@ class firestoreViewModel: ViewModel() {
 
     fun loadChat(phone: String) {
         database
-            .collection("chats/$currentUser/$phone")
+            .collection("chats/$myPhone/$phone")
             .addSnapshotListener { value, error ->
                 value?.let { value ->
                     val document = value.documents
