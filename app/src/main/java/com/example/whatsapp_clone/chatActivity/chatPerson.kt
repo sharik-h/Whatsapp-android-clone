@@ -26,6 +26,7 @@ import com.example.whatsapp_clone.viewmodel.firestoreViewModel
 fun chatPerson( name: String, phone: String, msgdate: String?, viewModel: firestoreViewModel) {
 
     viewModel.loadChat(phone = phone)
+    viewModel.unseen(phone)
 
     val arrowImg = painterResource(id = R.drawable.arrow_back)
     val userImg = painterResource(id = R.drawable.circle_img)
@@ -42,6 +43,7 @@ fun chatPerson( name: String, phone: String, msgdate: String?, viewModel: firest
     var micOrSend = Pair(micImg, 30)
     var message by remember { mutableStateOf("") }
     val chats by viewModel.chats.observeAsState(initial = emptyList())
+    val unSeen by viewModel.unSeen.observeAsState()
     val context = LocalContext.current
 
 
@@ -204,7 +206,7 @@ fun chatPerson( name: String, phone: String, msgdate: String?, viewModel: firest
                     Image(painter = bCircle, contentDescription = "", Modifier.size(60.dp))
                     IconButton(onClick = {
                         if (message != ""){
-                            viewModel.sendMessage(phone,message)
+                            viewModel.sendMessage(phone,message, unSeen ?: 0)
                             message = ""
                         }
                     }) {

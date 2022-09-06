@@ -21,6 +21,7 @@ class firestoreViewModel: ViewModel() {
     val userDetails: MutableLiveData<List<detailFormat>> = MutableLiveData<List<detailFormat>>()
     var allAvailableUsers : MutableLiveData<List<String>> = MutableLiveData<List<String>>()
     val chats: MutableLiveData<List<messageFormat>> = MutableLiveData<List<messageFormat>>()
+    val unSeen: MutableLiveData<Int> = MutableLiveData<Int>()
 
 
     fun addNewUser(
@@ -72,6 +73,8 @@ class firestoreViewModel: ViewModel() {
         database
             .document("whatsappclone/chats/$currentUser/$number")
             .set(detailFormat(name = name, phone = number))
+        database.document("chats/$number")
+            .set(mapOf(myPhone to 0))
     }
 
     fun isUserPresent(name:String ,number: String) {
@@ -86,7 +89,7 @@ class firestoreViewModel: ViewModel() {
 
     }
 
-    fun sendMessage(phone: String, message: String) {
+    fun sendMessage(phone: String, message: String, unSeen: Int) {
         val currentTime = LocalTime.now().toString()
         val currentDate = LocalDate.now().toString()
         val msg1 = messageFormat("1",message,currentTime,currentDate)
@@ -97,6 +100,8 @@ class firestoreViewModel: ViewModel() {
             .set(msg2)
         database.document("whatsappclone/chats/$currentUser/$phone")
             .update(mapOf("lastmsg" to message, "msgdate" to currentDate))
+        database.document("chats/$phone")
+            .update(mapOf(myPhone to unSeen+1))
     }
 
     fun loadChat(phone: String) {
@@ -115,6 +120,23 @@ class firestoreViewModel: ViewModel() {
                     chats.value = chatArray
                 }
             }
+        database.document("chats/$myPhone")
+            .set(mapOf(phone to 0))
     }
+
+    fun unseen(phone: String) {
+    var valll = 0
+    database.document("chats/$phone")
+        .addSnapshotListener { value, error ->
+            value?.let {
+                val field = value.data
+                field?.let {
+                    valll = it[myPhone].toString().toInt()
+                }
+            }
+            unSeen.value = valll
+        }
+}
+
 
 }
