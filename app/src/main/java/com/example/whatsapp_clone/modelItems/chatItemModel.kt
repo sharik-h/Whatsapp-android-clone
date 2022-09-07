@@ -5,11 +5,13 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -22,7 +24,7 @@ import com.example.whatsapp_clone.chatActivity.chatActivity
 import com.example.whatsapp_clone.data.detailFormat
 
 @Composable
-fun chatItemModel(detailFormat: detailFormat) {
+fun chatItemModel(detailFormat: detailFormat, notification: Int) {
     val imageIcon = painterResource(id = R.drawable.circle_img)
     val context = LocalContext.current
     Column(
@@ -51,8 +53,21 @@ fun chatItemModel(detailFormat: detailFormat) {
                    }
                     Spacer(modifier = Modifier.width(15.dp))
                 }
-                detailFormat.lastmsg?.let {
-                    Text(text = detailFormat.lastmsg.toString(), color = Color(0xFF808080))
+                Row(Modifier.fillMaxWidth()) {
+                    detailFormat.lastmsg?.let {
+                        Text(text = detailFormat.lastmsg.toString(), color = Color(0xFF808080), modifier = Modifier.weight(0.76f))
+                    }
+                    if (notification != 0) {
+                        Box(
+                            contentAlignment = Alignment.Center,
+                          modifier =  Modifier
+                                .size(20.dp)
+                                .clip(RoundedCornerShape(50))
+                                .background(Color(0xFF3AD861))) {
+                          Text(text = notification.toString(), color = Color.White, fontSize = 12.sp)
+                        }
+                    }
+                    Spacer(modifier = Modifier.weight(0.04f))
                 }
             }
         }

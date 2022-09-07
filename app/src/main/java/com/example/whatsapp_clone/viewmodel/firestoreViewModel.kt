@@ -22,6 +22,7 @@ class firestoreViewModel: ViewModel() {
     var allAvailableUsers : MutableLiveData<List<String>> = MutableLiveData<List<String>>()
     val chats: MutableLiveData<List<messageFormat>> = MutableLiveData<List<messageFormat>>()
     val unSeen: MutableLiveData<Int> = MutableLiveData<Int>()
+    val notSeen: MutableLiveData<List<Pair<String,Int>>> = MutableLiveData<List<Pair<String,Int>>>()
 
 
     fun addNewUser(
@@ -121,7 +122,7 @@ class firestoreViewModel: ViewModel() {
                 }
             }
         database.document("chats/$myPhone")
-            .set(mapOf(phone to 0))
+            .update(mapOf(phone to 0))
     }
 
     fun unseen(phone: String) {
@@ -138,5 +139,22 @@ class firestoreViewModel: ViewModel() {
         }
 }
 
+    fun myNotifications() {
+        database.document("chats/$myPhone")
+            .addSnapshotListener { value, error ->
+                value?.let {
+                    val fields = value.data
+                    val array = ArrayList<Pair<String,Int>>()
+                    fields?.let { fields->
+                        fields.forEach { field->
+                            field.let {
+                                array.add(field.key.toString() to field.value.toString().toInt())
+                            }
+                        }
+                    }
+                    notSeen.value = array
+                }
+            }
+    }
 
 }

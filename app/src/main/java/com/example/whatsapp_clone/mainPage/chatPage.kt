@@ -26,10 +26,13 @@ fun chatPage(viewModel: firestoreViewModel) {
 
     viewModel.getData()
     viewModel.getAllUsers()
+    viewModel.myNotifications()
     val userDetails by viewModel.userDetails.observeAsState(initial = emptyList())
     val availableUsers by viewModel.allAvailableUsers.observeAsState(initial = emptyList())
+    val myNotifications by viewModel.notSeen.observeAsState()
     val allusers = availableUsers.toTypedArray()
     val context = LocalContext.current
+    var notification = 0
 
     Column(
         verticalArrangement = Arrangement.Bottom,
@@ -54,7 +57,10 @@ fun chatPage(viewModel: firestoreViewModel) {
             .fillMaxWidth()
             .padding(5.dp)) {
             items(items = userDetails) {
-                chatItemModel(it)
+               for (i in myNotifications!!) {
+                   if (i.first == it.phone) notification = i.second
+               }
+                chatItemModel(it ,notification)
             }
         }
     }
