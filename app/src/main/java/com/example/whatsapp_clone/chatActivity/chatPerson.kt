@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.whatsapp_clone.R
 import com.example.whatsapp_clone.viewmodel.firestoreViewModel
+import java.time.LocalDate
 
 
 @Composable
@@ -41,6 +42,8 @@ fun chatPerson( name: String, phone: String, msgdate: String?, viewModel: firest
     val chatBgImg = painterResource(id = R.drawable.chat_background)
     val sendImg = painterResource(id = R.drawable.send_white)
     var micOrSend = Pair(micImg, 30)
+    val cdate = LocalDate.now().toString()
+    var tempDate = msgdate
     var message by remember { mutableStateOf("") }
     val chats by viewModel.chats.observeAsState(initial = emptyList())
     val unSeen by viewModel.unSeen.observeAsState()
@@ -114,7 +117,25 @@ fun chatPerson( name: String, phone: String, msgdate: String?, viewModel: firest
             LazyColumn(modifier = Modifier.fillMaxWidth()){
                 items(items = chats) { item ->
                     Spacer(modifier = Modifier.height(2.dp))
-                    if (item.id == "2") {
+
+
+                    if(item.message  == ""){
+                        var day = item.date
+                        if (day == cdate) day = "Today"
+                        Row(
+                            horizontalArrangement = Arrangement.Center,
+                            modifier = Modifier
+                                .fillMaxWidth()) {
+                            Box(modifier = Modifier
+                                .clip(RoundedCornerShape(30))
+                                .background(Color.White)
+                                .padding(horizontal = 8.dp, vertical = 6.dp)) {
+                                day?.let {
+                                    Text(text = day, fontWeight = FontWeight.SemiBold, color = Color.DarkGray)
+                                }
+                            }
+                        }
+                    }else if (item.id == "2" ) {
                         Row(
                             horizontalArrangement = Arrangement.Start,
                             modifier = Modifier
@@ -130,7 +151,7 @@ fun chatPerson( name: String, phone: String, msgdate: String?, viewModel: firest
                                 Text(text = item.message.toString())
                             }
                         }
-                    }else {
+                    }else if (item.id == "1" ) {
                         Row(
                             horizontalArrangement = Arrangement.End,
                             modifier = Modifier
@@ -206,6 +227,10 @@ fun chatPerson( name: String, phone: String, msgdate: String?, viewModel: firest
                     Image(painter = bCircle, contentDescription = "", Modifier.size(60.dp))
                     IconButton(onClick = {
                         if (message != ""){
+                            if (tempDate != cdate) {
+                                viewModel.sendMessage(phone,"", unSeen?.minus(1) ?: 0)
+                                tempDate = cdate
+                            }
                             viewModel.sendMessage(phone,message, unSeen ?: 0)
                             message = ""
                         }
