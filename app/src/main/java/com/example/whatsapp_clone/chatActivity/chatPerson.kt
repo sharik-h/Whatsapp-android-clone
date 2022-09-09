@@ -142,13 +142,23 @@ fun chatPerson( name: String, phone: String, msgdate: String?, viewModel: firest
                                 .fillMaxWidth()
                                 .padding(horizontal = 15.dp)
                         ) {
-                            Box(
-                                Modifier
+                            Row(
+                                verticalAlignment = Alignment.Bottom,
+                                modifier = Modifier
                                     .clip(RoundedCornerShape(30))
                                     .background(Color.White)
-                                    .padding(10.dp)
+                                    .padding(vertical = 7.dp, horizontal = 10.dp)
                             ) {
-                                Text(text = item.message.toString())
+                                Text(
+                                    text = item.time.toString().dropLast(7),
+                                    fontSize = 12.sp,
+                                    modifier = Modifier.padding(end = 5.dp),
+                                    color = Color(0xFF7E7E7E)
+                                )
+                                Text(
+                                    text = item.message.toString(),
+                                    fontSize = 18.sp
+                                )
                             }
                         }
                     }else if (item.id == "1" ) {
@@ -158,13 +168,23 @@ fun chatPerson( name: String, phone: String, msgdate: String?, viewModel: firest
                                 .fillMaxWidth()
                                 .padding(horizontal = 15.dp)
                         ) {
-                            Box(
-                                Modifier
+                            Row(
+                                verticalAlignment = Alignment.Bottom,
+                                modifier = Modifier
                                     .clip(RoundedCornerShape(30))
                                     .background(Color(0xFFDBFFD0))
-                                    .padding(10.dp)
+                                    .padding(vertical = 7.dp, horizontal = 10.dp)
                             ) {
-                                Text(text = item.message.toString())
+                                Text(
+                                    text = item.message.toString(),
+                                    fontSize = 18.sp
+                                )
+                                Text(
+                                    text = item.time.toString().dropLast(7),
+                                    fontSize = 12.sp,
+                                    modifier = Modifier.padding(start = 5.dp),
+                                    color = Color(0xFF7E7E7E)
+                                )
                             }
                         }
                     }
