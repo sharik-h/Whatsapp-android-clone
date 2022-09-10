@@ -157,4 +157,10 @@ class firestoreViewModel: ViewModel() {
             }
     }
 
+    fun addToCallLog(phone: String) {
+        val currentTime = LocalTime.now().toString()
+        val currentDate = LocalDate.now().toString()
+        database.document("callLogs/$myPhone/$currentDate/$currentTime")
+            .set(mapOf("phone" to phone))
+    }
 }

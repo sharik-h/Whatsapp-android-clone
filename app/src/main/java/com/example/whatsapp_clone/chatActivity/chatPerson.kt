@@ -1,6 +1,7 @@
 package com.example.whatsapp_clone.chatActivity
 
 import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -48,6 +49,8 @@ fun chatPerson( name: String, phone: String, msgdate: String?, viewModel: firest
     val chats by viewModel.chats.observeAsState(initial = emptyList())
     val unSeen by viewModel.unSeen.observeAsState()
     val context = LocalContext.current
+    val phone_intent = Intent(Intent.ACTION_CALL)
+    phone_intent.data = Uri.parse("tel:$phone")
 
 
     Column(Modifier.fillMaxSize()) {
@@ -102,7 +105,12 @@ fun chatPerson( name: String, phone: String, msgdate: String?, viewModel: firest
             Image(
                 painter = phoneImg,
                 contentDescription = "",
-                modifier = Modifier.padding(9.dp)
+                modifier = Modifier
+                    .padding(9.dp)
+                    .clickable {
+                        viewModel.addToCallLog(phone)
+                        context.startActivity(phone_intent)
+                    }
             )
             Image(
                 painter = optionsImg,
