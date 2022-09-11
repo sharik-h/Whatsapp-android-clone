@@ -14,18 +14,18 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.content.ContextCompat.startActivity
 import com.example.whatsapp_clone.R
-import java.util.*
+import com.example.whatsapp_clone.viewmodel.firestoreViewModel
 
 
 @Composable
 fun callLogModel(
     Name: String,
-    duration: String,
+    time: String,
     type: String,
+    viewModel: firestoreViewModel,
+    phone: String?
 ) {
-    println("number = $Name, type = $type, date = $duration")
     val userImg = painterResource(id = R.drawable.circle_img)
     val phoneImg = painterResource(id = R.drawable.phone_green)
     val cameraImg = painterResource(id = R.drawable.video_camera)
@@ -35,7 +35,7 @@ fun callLogModel(
     val incomingMissed = painterResource(id = R.drawable.incoming_missed)
     val context = LocalContext.current
     val phone_intent = Intent(Intent.ACTION_CALL)
-    phone_intent.data = Uri.parse("tel:$Name")
+    phone_intent.data = Uri.parse("tel:$phone")
 
 
     Row(
@@ -56,11 +56,15 @@ fun callLogModel(
                 if (type == "1") Image(painter = callRecived, contentDescription = "", modifier = Modifier.size(19.dp))
                 else if (type == "2")  Image(painter = callMade, contentDescription = "", modifier = Modifier.size(19.dp))
                 else if (type == "3")  Image(painter = incomingMissed, contentDescription = "", modifier = Modifier.size(19.dp))
-                Text(text = duration)
+                Text(text = time.dropLast(7))
             }
         }
 
-        IconButton(onClick = { context.startActivity(phone_intent)}) {
+        IconButton(onClick = {
+            context.startActivity(phone_intent)
+            viewModel.addToCallLog(name = Name, phone = phone!!)
+
+        }) {
             Image(painter = phoneImg, contentDescription ="")
         }
     }

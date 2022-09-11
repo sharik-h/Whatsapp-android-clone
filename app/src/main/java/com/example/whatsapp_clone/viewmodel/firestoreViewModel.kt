@@ -5,9 +5,11 @@ import android.util.Log
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.whatsapp_clone.data.callLogFormat
 import com.example.whatsapp_clone.data.detailFormat
 import com.example.whatsapp_clone.data.messageFormat
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import java.time.LocalDate
@@ -23,6 +25,7 @@ class firestoreViewModel: ViewModel() {
     val chats: MutableLiveData<List<messageFormat>> = MutableLiveData<List<messageFormat>>()
     val unSeen: MutableLiveData<Int> = MutableLiveData<Int>()
     val notSeen: MutableLiveData<List<Pair<String,Int>>> = MutableLiveData<List<Pair<String,Int>>>()
+    val callLogs: MutableLiveData<List<callLogFormat>> = MutableLiveData<List<callLogFormat>>()
 
 
     fun addNewUser(
@@ -157,10 +160,49 @@ class firestoreViewModel: ViewModel() {
             }
     }
 
-    fun addToCallLog(phone: String) {
+    fun addToCallLog(name: String, phone: String) {
         val currentTime = LocalTime.now().toString()
         val currentDate = LocalDate.now().toString()
-        database.document("callLogs/$myPhone/$currentDate/$currentTime")
-            .set(mapOf("phone" to phone))
+        val  doc1 = callLogFormat(
+            name = name,
+            phone = phone,
+            date = currentDate,
+            time = currentTime,
+            inOutMiss = "2",
+            dateTime = "$currentDate$currentTime"
+        )
+        val doc2 = callLogFormat(
+            name = name,
+            phone = phone,
+            date = currentDate,
+            time = currentTime,
+            inOutMiss = "1",
+            dateTime = "$currentDate$currentTime"
+        )
+        database.collection("callLogs/calls/$myPhone")
+            .add(doc1)
+        database.collection("callLogs/calls/$phone")
+            .add(doc2)
+    }
+
+    fun loadCallLog() {
+        database.collection("callLogs/calls/$myPhone")
+            .orderBy("dateTime",Query.Direction.DESCENDING)
+            .limit(30)
+            .addSnapshotListener { value, error ->
+                value?.let {
+                    val doc = value.documents
+                    val callArray = ArrayList<callLogFormat>()
+                    doc.let {
+                        doc.forEach {
+                            val item = it.toObject(callLogFormat::class.java)
+                            item?.let {
+                                callArray.add(item)
+                            }
+                        }
+                    }
+                    callLogs.value = callArray
+                }
+            }
     }
 }

@@ -108,7 +108,7 @@ fun chatPerson( name: String, phone: String, msgdate: String?, viewModel: firest
                 modifier = Modifier
                     .padding(9.dp)
                     .clickable {
-                        viewModel.addToCallLog(phone)
+                        viewModel.addToCallLog(name, phone)
                         context.startActivity(phone_intent)
                     }
             )
