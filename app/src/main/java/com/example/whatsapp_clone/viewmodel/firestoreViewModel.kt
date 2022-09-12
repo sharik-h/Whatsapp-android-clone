@@ -183,6 +183,8 @@ class firestoreViewModel: ViewModel() {
             .add(doc1)
         database.collection("callLogs/calls/$phone")
             .add(doc2)
+        database.document("whatsappclone/chats/$currentUser/$phone")
+            .update(mapOf("lastmsg" to "voice call", "msgdate" to currentDate))
     }
 
     fun loadCallLog() {
