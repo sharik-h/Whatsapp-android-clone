@@ -3,6 +3,7 @@ package com.example.whatsapp_clone.viewmodel
 
 import android.util.Log
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.core.net.toUri
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.whatsapp_clone.data.callLogFormat
@@ -12,12 +13,14 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
 import java.time.LocalDate
 import java.time.LocalTime
 
 class firestoreViewModel: ViewModel() {
 
     val database = Firebase.firestore
+    val storageref = Firebase.storage.reference
     val currentUser = FirebaseAuth.getInstance().uid
     val myPhone = FirebaseAuth.getInstance().currentUser?.phoneNumber
     val userDetails: MutableLiveData<List<detailFormat>> = MutableLiveData<List<detailFormat>>()
@@ -93,13 +96,13 @@ class firestoreViewModel: ViewModel() {
 
     }
 
-    fun sendMessage(phone: String, message: String, unSeen: Int) {
+    fun sendMessage(phone: String, message: String, unSeen: Int, messageType: Int) {
         val currentTime = LocalTime.now().toString()
         val currentDate = LocalDate.now().toString()
-        val msg1 = messageFormat("1",message,currentTime,currentDate)
+        val msg1 = messageFormat("1",message,currentTime,currentDate,messageType)
         database.document("chats/$myPhone/$phone/$currentDate$currentTime")
            .set(msg1)
-        val msg2 = messageFormat("2", message, currentTime, currentDate)
+        val msg2 = messageFormat("2", message, currentTime, currentDate,messageType)
         database.document("chats/$phone/$myPhone/$currentDate$currentTime")
             .set(msg2)
         database.document("whatsappclone/chats/$currentUser/$phone")
@@ -206,5 +209,11 @@ class firestoreViewModel: ViewModel() {
                     callLogs.value = callArray
                 }
             }
+    }
+
+    fun sendImage(image: String, name: String, phone: String) {
+        storageref
+            .child("chats/$phone/$name")
+            .putFile(image.toUri())
     }
 }

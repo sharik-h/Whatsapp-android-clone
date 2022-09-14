@@ -268,10 +268,10 @@ fun chatPerson( name: String, phone: String, msgdate: String?, viewModel: firest
                     IconButton(onClick = {
                         if (message != ""){
                             if (tempDate != cdate) {
-                                viewModel.sendMessage(phone,"", unSeen?.minus(1) ?: 0)
+                                viewModel.sendMessage(phone,"", unSeen?.minus(1) ?: 0, 1)
                                 tempDate = cdate
                             }
-                            viewModel.sendMessage(phone,message, unSeen ?: 0)
+                            viewModel.sendMessage(phone,message, unSeen ?: 0,1)
                             message = ""
                         }
                     }) {
