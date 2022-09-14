@@ -5,12 +5,12 @@ plugins {
 }
 
 android {
-    compileSdk 31
+    compileSdk 33
 
     defaultConfig {
         applicationId "com.example.whatsapp_clone"
         minSdk 30
-        targetSdk 32
+        targetSdk 33
         versionCode 1
         versionName "1.0"
 
@@ -83,5 +83,8 @@ dependencies {
 
     //livedata
     implementation "androidx.compose.runtime:runtime-livedata:$compose_version"
+
+    //coil
+    implementation("io.coil-kt:coil-compose:2.2.1")
 
 }
