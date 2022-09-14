@@ -2,6 +2,8 @@ package com.example.whatsapp_clone.chatActivity
 
 import android.content.Intent
 import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -51,6 +53,14 @@ fun chatPerson( name: String, phone: String, msgdate: String?, viewModel: firest
     val context = LocalContext.current
     val phone_intent = Intent(Intent.ACTION_CALL)
     phone_intent.data = Uri.parse("tel:$phone")
+    var imageUri by remember { mutableStateOf<Uri?>(null) }
+    val launcher = rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri: Uri? ->
+        imageUri = uri
+        context.startActivity(Intent(context, attachmentActivity::class.java)
+            .putExtra("imageUri",imageUri.toString())
+            .putExtra("name", name)
+            .putExtra("phone", phone))
+    }
 
 
     Column(Modifier.fillMaxSize()) {
@@ -232,7 +242,9 @@ fun chatPerson( name: String, phone: String, msgdate: String?, viewModel: firest
                             unfocusedIndicatorColor = Color.Transparent,
                         )
                     )
-                    IconButton(onClick = { /*TODO*/ }) {
+                    IconButton(onClick = {
+                        launcher.launch("image/*")
+                    }) {
                         Image(painter = attachFileImg, contentDescription = "")
                     }
                     if (message == "") {
