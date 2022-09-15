@@ -19,6 +19,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.net.toUri
 import coil.compose.rememberAsyncImagePainter
 import com.example.whatsapp_clone.R
 import com.example.whatsapp_clone.viewmodel.firestoreViewModel
@@ -134,7 +135,9 @@ class attachmentActivity: ComponentActivity() {
                         viewModel.sendImage(
                             image = imageUri!!,
                             name = "$currentDate$currentTime",
-                            phone = phone
+                            phone = phone,
+                            context = context,
+                            extension = "jpeg"
                         )
                         finish()
                     },

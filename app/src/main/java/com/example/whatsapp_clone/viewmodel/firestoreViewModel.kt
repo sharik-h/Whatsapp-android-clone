@@ -1,8 +1,11 @@
 package com.example.whatsapp_clone.viewmodel
 
 
-import android.util.Log
-import androidx.compose.ui.graphics.vector.ImageVector
+import android.content.ContentResolver
+import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.ImageDecoder
 import androidx.core.net.toUri
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -14,8 +17,11 @@ import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
+import java.io.FileInputStream
+import java.io.FileOutputStream
 import java.time.LocalDate
 import java.time.LocalTime
+import java.util.*
 
 class firestoreViewModel: ViewModel() {
 
@@ -99,6 +105,8 @@ class firestoreViewModel: ViewModel() {
     fun sendMessage(phone: String, message: String, unSeen: Int, messageType: Int) {
         val currentTime = LocalTime.now().toString()
         val currentDate = LocalDate.now().toString()
+        var lastmsg = message
+        if (messageType == 2 ) lastmsg = "image"
         val msg1 = messageFormat("1",message,currentTime,currentDate,messageType)
         database.document("chats/$myPhone/$phone/$currentDate$currentTime")
            .set(msg1)
@@ -106,7 +114,7 @@ class firestoreViewModel: ViewModel() {
         database.document("chats/$phone/$myPhone/$currentDate$currentTime")
             .set(msg2)
         database.document("whatsappclone/chats/$currentUser/$phone")
-            .update(mapOf("lastmsg" to message, "msgdate" to currentDate))
+            .update(mapOf("lastmsg" to lastmsg, "msgdate" to currentDate))
         database.document("chats/$phone")
             .update(mapOf(myPhone to unSeen+1))
     }
@@ -211,9 +219,59 @@ class firestoreViewModel: ViewModel() {
             }
     }
 
-    fun sendImage(image: String, name: String, phone: String) {
+    fun sendImage(image: String, name: String, phone: String, extension: String, context: Context) {
+        storageref
+            .child("chats/$myPhone/$name")
+            .putFile(image.toUri())
         storageref
             .child("chats/$phone/$name")
             .putFile(image.toUri())
+        var name1 = name
+        name1 = "$name.$extension"
+        val contentResolver: ContentResolver = context.contentResolver
+        val source: ImageDecoder.Source = ImageDecoder.createSource(contentResolver, image.toUri())
+        var bitmap = ImageDecoder.decodeBitmap(source)
+        val fileOutputStream: FileOutputStream
+        try {
+            fileOutputStream = context.openFileOutput(name1, Context.MODE_PRIVATE)
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 90, fileOutputStream)
+            fileOutputStream.close()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    fun saveImage(context: Context, name1: String, extension: String) {
+        storageref
+            .child("chats/$myPhone/$name1")
+            .getBytes(Long.MAX_VALUE)
+            .addOnSuccessListener {
+                val bitmap = BitmapFactory.decodeByteArray(it, 0, it.size)
+                var name = name1
+                name = "$name.$extension"
+                val fileOutputStream: FileOutputStream
+                try {
+                    fileOutputStream = context.openFileOutput(name, Context.MODE_PRIVATE)
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 90, fileOutputStream)
+                    fileOutputStream.close()
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+    }
+
+    fun loadImageBitmap(context: Context, name1: String, extension: String): Bitmap? {
+        val name = "$name1.$extension"
+        val fileInputStream : FileInputStream
+        var bitmap: Bitmap? = null
+        try{
+            fileInputStream = context.openFileInput(name);
+            bitmap = BitmapFactory.decodeStream(fileInputStream)
+            fileInputStream.close()
+        } catch(e: Exception) {
+            e.printStackTrace()
+            saveImage(context,name1,"jpeg")
+        }
+        return bitmap
     }
 }

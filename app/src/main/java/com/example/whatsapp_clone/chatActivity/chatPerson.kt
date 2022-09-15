@@ -21,6 +21,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.rememberAsyncImagePainter
 import com.example.whatsapp_clone.R
 import com.example.whatsapp_clone.viewmodel.firestoreViewModel
 import java.time.LocalDate
@@ -153,7 +154,7 @@ fun chatPerson( name: String, phone: String, msgdate: String?, viewModel: firest
                                 }
                             }
                         }
-                    }else if (item.id == "2" ) {
+                    }else if (item.id == "2" && item.messageType == 1) {
                         Row(
                             horizontalArrangement = Arrangement.Start,
                             modifier = Modifier
@@ -179,7 +180,7 @@ fun chatPerson( name: String, phone: String, msgdate: String?, viewModel: firest
                                 )
                             }
                         }
-                    }else if (item.id == "1" ) {
+                    }else if (item.id == "1" && item.messageType == 1) {
                         Row(
                             horizontalArrangement = Arrangement.End,
                             modifier = Modifier
@@ -202,6 +203,64 @@ fun chatPerson( name: String, phone: String, msgdate: String?, viewModel: firest
                                     fontSize = 12.sp,
                                     modifier = Modifier.padding(start = 5.dp),
                                     color = Color(0xFF7E7E7E)
+                                )
+                            }
+                        }
+                    } else if (item.id == "1" && item.messageType == 2) {
+                        Row(
+                            horizontalArrangement = Arrangement.End,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 15.dp)
+                        ) {
+                          Box(
+                              contentAlignment = Alignment.BottomEnd,
+                              modifier =Modifier
+                                  .heightIn(min = 40.dp, max = 360.dp)
+                                  .widthIn(min = 40.dp, max = 280.dp)
+                                  .clip(RoundedCornerShape(5))
+                                  .background(Color(0xFFDBFFD0))
+                                  .padding(4.dp)) {
+                              val bitmap = viewModel.loadImageBitmap(context,item.message!!,"jpeg")
+                              Image(
+                                  painter = rememberAsyncImagePainter(bitmap),
+                                  contentDescription = "",
+                                  modifier = Modifier.clip(RoundedCornerShape(5))
+                              )
+                              Text(
+                                  text = item.time.toString().dropLast(7),
+                                  fontSize = 12.sp,
+                                  color = Color.White,
+                                  modifier = Modifier.padding(end = 9.dp, bottom = 2.dp)
+                              )
+                          }
+                        }
+                    } else if (item.id == "2" && item.messageType == 2) {
+                        Row(
+                            horizontalArrangement = Arrangement.Start,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 15.dp)
+                        ) {
+                            Box(
+                                contentAlignment = Alignment.BottomEnd,
+                                modifier =Modifier
+                                    .heightIn(min = 40.dp, max = 360.dp)
+                                    .widthIn(min = 40.dp, max = 280.dp)
+                                    .clip(RoundedCornerShape(5))
+                                    .background(Color(0xFFDBFFD0))
+                                    .padding(4.dp)) {
+                                val bitmap = viewModel.loadImageBitmap(context,item.message!!,"jpeg")
+                                Image(
+                                    painter = rememberAsyncImagePainter(bitmap),
+                                    contentDescription = "",
+                                    modifier = Modifier.clip(RoundedCornerShape(5))
+                                )
+                                Text(
+                                    text = item.time.toString().dropLast(7),
+                                    fontSize = 12.sp,
+                                    color = Color.White,
+                                    modifier = Modifier.padding(end = 9.dp, bottom = 2.dp)
                                 )
                             }
                         }
