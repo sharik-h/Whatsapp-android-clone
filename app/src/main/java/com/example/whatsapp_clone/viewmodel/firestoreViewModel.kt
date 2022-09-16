@@ -39,6 +39,7 @@ class firestoreViewModel: ViewModel() {
 
     fun addNewUser(
         uid: String,
+        uri: String?,
         Name: String,
         Phone: String
     ) {
@@ -46,6 +47,11 @@ class firestoreViewModel: ViewModel() {
         database
             .document("users/$Phone")
             .set(details)
+        if (uri != null) {
+            storageref
+                .child("phone/$Phone")
+                .putFile(uri.toUri())
+        }
     }
 
     fun getData(): MutableList<detailFormat> {

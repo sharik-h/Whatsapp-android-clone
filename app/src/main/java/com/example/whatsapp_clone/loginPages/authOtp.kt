@@ -42,7 +42,6 @@ class AuthOtp(): ComponentActivity() {
 
     lateinit var Sotp: String
     var sendStatus = mutableStateOf(0)
-    val viewmodel:firestoreViewModel by viewModels()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -87,16 +86,8 @@ class AuthOtp(): ComponentActivity() {
         FirebaseAuth.getInstance().signInWithCredential(credential)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    finishAffinity()
-                    val currentuser = FirebaseAuth.getInstance().currentUser
-                    if (currentuser?.uid != null) {
-                        viewmodel.addNewUser(
-                            uid =   currentuser.uid,
-                            Name =  currentuser.displayName.toString(),
-                            Phone = currentuser.phoneNumber ?: "0"
-                        )
-                    }
-                    this.startActivity(Intent(this, MainActivity::class.java))
+                    finish()
+                    this.startActivity(Intent(this, profileSetupActivity::class.java))
                 } else {
                     Toast.makeText(applicationContext, "failed", Toast.LENGTH_SHORT).show()
                 }
