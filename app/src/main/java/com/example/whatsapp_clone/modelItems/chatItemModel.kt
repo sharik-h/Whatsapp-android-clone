@@ -19,12 +19,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.rememberAsyncImagePainter
 import com.example.whatsapp_clone.R
 import com.example.whatsapp_clone.chatActivity.chatActivity
 import com.example.whatsapp_clone.data.detailFormat
+import com.example.whatsapp_clone.data.userDetailsFormat
 
 @Composable
-fun chatItemModel(detailFormat: detailFormat, notification: Int) {
+fun chatItemModel(detailFormat: userDetailsFormat, notification: Int) {
     val imageIcon = painterResource(id = R.drawable.circle_img)
     val context = LocalContext.current
     Column(
@@ -43,28 +45,57 @@ fun chatItemModel(detailFormat: detailFormat, notification: Int) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Spacer(modifier = Modifier.width(11.dp))
-            Image(painter = imageIcon, contentDescription = "", modifier = Modifier.size(60.dp))
+            if (detailFormat.image == null) {
+                Image(
+                    painter = imageIcon,
+                    contentDescription = "",
+                    modifier = Modifier.size(60.dp)
+                )
+            }else {
+                Image(
+                    painter = rememberAsyncImagePainter(detailFormat.image),
+                    contentDescription = "",
+                    modifier = Modifier.clip(RoundedCornerShape(50)).size(50.dp)
+                )
+            }
             Spacer(modifier = Modifier.width(5.dp))
             Column {
                 Row(Modifier.fillMaxWidth()) {
-                    Text(text = detailFormat.name.toString(), fontSize = 18.sp, fontWeight = FontWeight.SemiBold, modifier = Modifier.weight(0.75f))
+                    Text(
+                        text = detailFormat.name.toString(),
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        modifier = Modifier.weight(0.75f)
+                    )
                    detailFormat.msgdate?.let {
-                       Text(text = detailFormat.msgdate.toString(), color = Color(0xFF808080), fontSize = 13.sp)
+                       Text(
+                           text = detailFormat.msgdate.toString(),
+                           color = Color(0xFF808080),
+                           fontSize = 13.sp
+                       )
                    }
                     Spacer(modifier = Modifier.width(15.dp))
                 }
                 Row(Modifier.fillMaxWidth()) {
                     detailFormat.lastmsg?.let {
-                        Text(text = detailFormat.lastmsg.toString(), color = Color(0xFF808080), modifier = Modifier.weight(0.76f))
+                        Text(
+                            text = detailFormat.lastmsg.toString(),
+                            color = Color(0xFF808080),
+                            modifier = Modifier.weight(0.76f)
+                        )
                     }
                     if (notification != 0) {
                         Box(
                             contentAlignment = Alignment.Center,
-                          modifier =  Modifier
-                                .size(20.dp)
-                                .clip(RoundedCornerShape(50))
-                                .background(Color(0xFF3AD861))) {
-                          Text(text = notification.toString(), color = Color.White, fontSize = 12.sp)
+                          modifier = Modifier
+                              .size(20.dp)
+                              .clip(RoundedCornerShape(50))
+                              .background(Color(0xFF3AD861))) {
+                          Text(
+                              text = notification.toString(),
+                              color = Color.White,
+                              fontSize = 12.sp
+                          )
                         }
                     }
                     Spacer(modifier = Modifier.weight(0.04f))

@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModel
 import com.example.whatsapp_clone.data.callLogFormat
 import com.example.whatsapp_clone.data.detailFormat
 import com.example.whatsapp_clone.data.messageFormat
+import com.example.whatsapp_clone.data.userDetailsFormat
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
@@ -29,7 +30,7 @@ class firestoreViewModel: ViewModel() {
     val storageref = Firebase.storage.reference
     val currentUser = FirebaseAuth.getInstance().uid
     val myPhone = FirebaseAuth.getInstance().currentUser?.phoneNumber
-    val userDetails: MutableLiveData<List<detailFormat>> = MutableLiveData<List<detailFormat>>()
+    val userDetails: MutableLiveData<List<userDetailsFormat>> = MutableLiveData<List<userDetailsFormat>>()
     var allAvailableUsers : MutableLiveData<List<String>> = MutableLiveData<List<String>>()
     val chats: MutableLiveData<List<messageFormat>> = MutableLiveData<List<messageFormat>>()
     val unSeen: MutableLiveData<Int> = MutableLiveData<Int>()
@@ -54,7 +55,7 @@ class firestoreViewModel: ViewModel() {
         }
     }
 
-    fun getData(): MutableList<detailFormat> {
+    fun getData(context: Context): MutableList<detailFormat> {
         val activeChats : MutableList<detailFormat> = mutableListOf()
         database
             .collection("whatsappclone/chats/$currentUser")
@@ -62,11 +63,21 @@ class firestoreViewModel: ViewModel() {
                     querySnapshot, firebaseFirestoreException ->
                 querySnapshot?.let { querySnapshot ->
                     var documents = querySnapshot.documents
-                    var chats = ArrayList<detailFormat>()
+                    var chats = ArrayList<userDetailsFormat>()
                     documents.forEach{
                         var allchats = it.toObject(detailFormat::class.java)
                         allchats?.let {
-                            chats.add(allchats)
+                            val uds = userDetailsFormat(
+                                name = allchats.name,
+                                phone = allchats.phone,
+                                uid = allchats.uid,
+                                lastmsg = allchats.lastmsg,
+                                msgdate = allchats.msgdate
+                            )
+                             it.phone?.let { it1 ->
+                                 uds.image =loadImageBitmap(context, "+917034369507" ,"jpeg")
+                            }
+                            chats.add(uds)
                         }
                     }
                     userDetails.value = chats
@@ -249,7 +260,7 @@ class firestoreViewModel: ViewModel() {
 
     fun saveImage(context: Context, name1: String, extension: String) {
         storageref
-            .child("chats/$myPhone/$name1")
+            .child("phone/$name1")
             .getBytes(Long.MAX_VALUE)
             .addOnSuccessListener {
                 val bitmap = BitmapFactory.decodeByteArray(it, 0, it.size)

@@ -24,14 +24,14 @@ import com.example.whatsapp_clone.viewmodel.firestoreViewModel
 @Composable
 fun chatPage(viewModel: firestoreViewModel) {
 
-    viewModel.getData()
+    val context = LocalContext.current
+    viewModel.getData(context)
     viewModel.getAllUsers()
     viewModel.myNotifications()
     val userDetails by viewModel.userDetails.observeAsState(initial = emptyList())
     val availableUsers by viewModel.allAvailableUsers.observeAsState(initial = emptyList())
     val myNotifications by viewModel.notSeen.observeAsState()
     val allusers = availableUsers.toTypedArray()
-    val context = LocalContext.current
     var notification = 0
 
     Column(

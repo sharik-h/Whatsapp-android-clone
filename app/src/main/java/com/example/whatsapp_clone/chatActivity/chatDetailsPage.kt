@@ -5,23 +5,28 @@ import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.IconButton
+import androidx.compose.material.SnackbarDefaults.backgroundColor
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.RoundRect
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.rememberAsyncImagePainter
 import com.example.whatsapp_clone.R
+import com.example.whatsapp_clone.viewmodel.firestoreViewModel
 
 @Composable
-fun chatDetailsPage(name: String, phone: String, lstseen: String?) {
+fun chatDetailsPage(name: String, phone: String, lstseen: String?, viewModel: firestoreViewModel) {
     val backImg = painterResource(id = R.drawable.arrow_back_grey)
     val optionImg = painterResource(id = R.drawable.option_grey)
     val userImg = painterResource(id = R.drawable.circle_img)
@@ -36,7 +41,8 @@ fun chatDetailsPage(name: String, phone: String, lstseen: String?) {
     val disappearingImg = painterResource(id = R.drawable.storage_img)
     val blockImg = painterResource(id = R.drawable.block_red)
     val reportImg = painterResource(id = R.drawable.thumb_down_red)
-
+    val context = LocalContext.current
+    var profileImg = viewModel.loadImageBitmap(context, phone, "jpeg")
 
     Box(Modifier.fillMaxSize()) {
 
@@ -56,7 +62,20 @@ fun chatDetailsPage(name: String, phone: String, lstseen: String?) {
                     .background(Color.White)
             ) {
 
-                Image(painter = userImg, contentDescription = "", modifier = Modifier.size(135.dp))
+                Spacer(modifier = Modifier.height(15.dp))
+                if (profileImg != null) {
+                    Image(
+                        painter = rememberAsyncImagePainter(profileImg),
+                        contentDescription = "",
+                        modifier = Modifier
+                            .size(135.dp)
+                            .clip(RoundedCornerShape(50)))
+                }else {
+                    Image(
+                        painter = userImg,
+                        contentDescription = "",
+                        modifier = Modifier.size(135.dp))
+                }
                 Text(text = name, fontSize = 25.sp)
                 Spacer(modifier = Modifier.height(5.dp))
                 Text(text = phone, color = Color(0xFF797979), fontSize = 18.sp)

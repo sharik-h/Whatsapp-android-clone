@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import android.os.PersistableBundle
+import android.provider.MediaStore
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
@@ -34,6 +35,7 @@ import com.example.whatsapp_clone.MainActivity
 import com.example.whatsapp_clone.R
 import com.example.whatsapp_clone.viewmodel.firestoreViewModel
 import com.google.firebase.auth.FirebaseAuth
+import java.io.ByteArrayOutputStream
 
 
 class profileSetupActivity: ComponentActivity() {
@@ -50,11 +52,12 @@ class profileSetupActivity: ComponentActivity() {
 
     @Composable
     fun profileSetupPage() {
+        val context = LocalContext.current
         val userImg = painterResource(id = R.drawable.add_photo_grey)
         var name by remember { mutableStateOf("") }
         var expanded by remember { mutableStateOf(false) }
         var imageUri by remember { mutableStateOf<Uri?>(null) }
-        var bitmap by remember { mutableStateOf<Bitmap?>(null) }
+        var bitmap by remember { mutableStateOf<Uri?>(null) }
         val glauncher =
             rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri: Uri? ->
                 imageUri = uri
@@ -62,10 +65,13 @@ class profileSetupActivity: ComponentActivity() {
             }
         val clauncher =
             rememberLauncherForActivityResult(ActivityResultContracts.TakePicturePreview()) {
-                bitmap = it
+                  val bytes = ByteArrayOutputStream()
+                it.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
+                val path = MediaStore.Images.Media.insertImage(context.contentResolver, it, "Title", null)
+                bitmap = Uri.parse(path.toString())
                 imageUri = null
             }
-        val context = LocalContext.current
+
 
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,

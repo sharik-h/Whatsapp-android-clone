@@ -54,6 +54,7 @@ fun chatPerson( name: String, phone: String, msgdate: String?, viewModel: firest
     val context = LocalContext.current
     val phone_intent = Intent(Intent.ACTION_CALL)
     phone_intent.data = Uri.parse("tel:$phone")
+    var profileImg = viewModel.loadImageBitmap(context, phone, "jpeg")
     var imageUri by remember { mutableStateOf<Uri?>(null) }
     val launcher = rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri: Uri? ->
         imageUri = uri
@@ -94,11 +95,22 @@ fun chatPerson( name: String, phone: String, msgdate: String?, viewModel: firest
                         )
                     }) {
 
-                Image(
-                    painter = userImg,
-                    contentDescription = "",
-                    modifier = Modifier.size(45.dp)
-                )
+                if (profileImg == null) {
+                    Image(
+                        painter = userImg,
+                        contentDescription = "",
+                        modifier = Modifier.size(45.dp)
+                    )
+                }else {
+                    Image(
+                        painter = rememberAsyncImagePainter(model = profileImg),
+                        contentDescription = "",
+                        modifier = Modifier
+                            .size(40.dp)
+                            .clip(RoundedCornerShape(50))
+                    )
+                }
+                Spacer(modifier = Modifier.width(10.dp))
                 Text(
                     text = name,
                     fontSize = 20.sp,
