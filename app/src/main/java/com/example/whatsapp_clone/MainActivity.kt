@@ -201,7 +201,7 @@ class MainActivity : ComponentActivity() {
             HorizontalPager(count = 4, state = pagerState,) {
                 if (tabsList[pagerState.currentPage] == "CALLS") callPage(viewModel)
                 else if (tabsList[pagerState.currentPage] == "CHATS") chatPage(viewModel)
-                else if (tabsList[pagerState.currentPage] == "STATUS") statusPage()
+                else if (tabsList[pagerState.currentPage] == "STATUS") statusPage(viewModel)
                 else Text(text = tabsList[pagerState.currentPage])
             }
         }

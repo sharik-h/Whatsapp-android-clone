@@ -23,6 +23,7 @@ import java.io.FileOutputStream
 import java.time.LocalDate
 import java.time.LocalTime
 import java.util.*
+import kotlin.collections.ArrayList
 
 class firestoreViewModel: ViewModel() {
 
@@ -36,6 +37,7 @@ class firestoreViewModel: ViewModel() {
     val unSeen: MutableLiveData<Int> = MutableLiveData<Int>()
     val notSeen: MutableLiveData<List<Pair<String,Int>>> = MutableLiveData<List<Pair<String,Int>>>()
     val callLogs: MutableLiveData<List<callLogFormat>> = MutableLiveData<List<callLogFormat>>()
+    val statusList: MutableLiveData<MutableList<String>> = MutableLiveData<MutableList<String>>()
 
 
     fun addNewUser(
@@ -75,7 +77,7 @@ class firestoreViewModel: ViewModel() {
                                 msgdate = allchats.msgdate
                             )
                              it.phone?.let { it1 ->
-                                 uds.image =loadImageBitmap(context, "+917034369507" ,"jpeg")
+                                 uds.image =loadImageBitmap(context, it1,"jpeg")
                             }
                             chats.add(uds)
                         }
@@ -290,5 +292,68 @@ class firestoreViewModel: ViewModel() {
             saveImage(context,name1,"jpeg")
         }
         return bitmap
+    }
+
+    fun sendStatus(name: String, image: String, context: Context, extension: String) {
+        val currentTime = LocalTime.now().toString()
+        val name = "$myPhone$currentTime"
+        storageref.child("status/$myPhone/$name").putFile(image.toUri())
+
+        var name1 = name
+        name1 = "$name.$extension"
+        val contentResolver: ContentResolver = context.contentResolver
+        val source: ImageDecoder.Source = ImageDecoder.createSource(contentResolver, image.toUri())
+        var bitmap = ImageDecoder.decodeBitmap(source)
+        val fileOutputStream: FileOutputStream
+        try {
+            fileOutputStream = context.openFileOutput(name1, Context.MODE_PRIVATE)
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 90, fileOutputStream)
+            fileOutputStream.close()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+        database.document("status names/$myPhone").update(currentTime.dropLast(4) ,name)
+
+        database.collection("whatsappclone/chats/$currentUser")
+            .addSnapshotListener { value, error ->
+                value?.let {
+                    val documents = value.documents
+                    documents.forEach { document ->
+                        database.document("status/${document.id}")
+                            .update(mapOf(myPhone to true))
+                    }
+                }
+            }
+    }
+
+    fun loadMyStatus(context: Context): MutableList<Bitmap> {
+        val BitmapList = mutableListOf<Bitmap>()
+        database.document("status names/$myPhone")
+            .addSnapshotListener{ data, error ->
+                data?.let {
+                   val List = mutableListOf<String>()
+                    val doc = it.data
+                    doc?.forEach{
+                        List.add(it.value.toString())
+                    }
+                    statusList.value = List
+                }
+            }
+
+        statusList.value?.sorted()?.forEach {
+            val name = "$it.jpeg"
+            val fileInputStream : FileInputStream
+            var bitmap: Bitmap? = null
+            try{
+                fileInputStream = context.openFileInput(name)
+                bitmap = BitmapFactory.decodeStream(fileInputStream)
+                fileInputStream.close()
+                BitmapList.add(bitmap)
+            } catch(e: Exception) {
+                e.printStackTrace()
+            }
+        }
+        return BitmapList
     }
 }

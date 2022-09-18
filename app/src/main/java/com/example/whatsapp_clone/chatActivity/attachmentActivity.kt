@@ -19,7 +19,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.net.toUri
 import coil.compose.rememberAsyncImagePainter
 import com.example.whatsapp_clone.R
 import com.example.whatsapp_clone.viewmodel.firestoreViewModel
@@ -47,7 +46,9 @@ class attachmentActivity: ComponentActivity() {
         phone: String?,
         viewModel: firestoreViewModel
     ) {
-        viewModel.unseen(phone!!)
+        if (phone != null) {
+            viewModel.unseen(phone)
+        }
         val closeImg = painterResource(id = R.drawable.close_white)
         val cropImg = painterResource(id = R.drawable.crop_rotate_white)
         val smileImg = painterResource(id = R.drawable.imogi_white)
@@ -126,19 +127,31 @@ class attachmentActivity: ComponentActivity() {
                     onClick = {
                         val currentTime = LocalTime.now().toString()
                         val currentDate = LocalDate.now().toString()
-                        viewModel.sendMessage(
-                            phone = phone!!,
-                            message = "$currentDate$currentTime",
-                            unSeen = unSeen?.minus(1) ?: 0,
-                            messageType = 2
-                        )
-                        viewModel.sendImage(
-                            image = imageUri!!,
-                            name = "$currentDate$currentTime",
-                            phone = phone,
-                            context = context,
-                            extension = "jpeg"
-                        )
+                        if (phone != null) {
+                            viewModel.sendMessage(
+                                phone = phone,
+                                message = "$currentDate$currentTime",
+                                unSeen = unSeen?.minus(1) ?: 0,
+                                messageType = 2
+                            )
+
+                            viewModel.sendImage(
+                                image = imageUri!!,
+                                name = "$currentDate$currentTime",
+                                phone = phone,
+                                context = context,
+                                extension = "jpeg"
+                            )
+                        }else {
+                            val currentTime = LocalTime.now().toString()
+                            val name = "$phone$currentTime"
+                            viewModel.sendStatus(
+                                name =name,
+                                image = imageUri!!,
+                                context = context,
+                                extension = "jpeg"
+                            )
+                        }
                         finish()
                     },
                     Modifier
@@ -154,7 +167,11 @@ class attachmentActivity: ComponentActivity() {
 
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
                 Image(painter = arrowImg, contentDescription = "" , modifier = Modifier.size(20.dp))
-                Text(text = name!!, color = Color.White, fontSize = 14.sp)
+                if (name != null) {
+                    Text(text = name, color = Color.White, fontSize = 14.sp)
+                }else{
+                    Text(text = "Status(Contacts)", color = Color.White, fontSize = 14.sp)
+                }
                 Spacer(modifier = Modifier.width(12.dp))
             }
         }
