@@ -3,16 +3,18 @@ package com.example.whatsapp_clone.mainPage
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
-import android.provider.MediaStore
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -26,7 +28,6 @@ import coil.compose.rememberAsyncImagePainter
 import com.example.whatsapp_clone.R
 import com.example.whatsapp_clone.chatActivity.attachmentActivity
 import com.example.whatsapp_clone.viewmodel.firestoreViewModel
-import java.io.ByteArrayOutputStream
 
 @Composable
 fun statusPage(viewModel: firestoreViewModel) {
@@ -46,6 +47,12 @@ fun statusPage(viewModel: firestoreViewModel) {
             }
         var myStatus = mutableListOf<Bitmap>()
         myStatus = viewModel.loadMyStatus(context)
+        viewModel.allStatusUsers()
+        val allStatusUser by viewModel.allStatusUsers.observeAsState(initial = emptyList())
+        viewModel.getAllStatusNames(allStatusUser)
+        val allStatusList by viewModel.allStatusList.observeAsState(initial = emptyList())
+        viewModel.loadAllStatus(allStatusList = allStatusList, context = context)
+        val allStatus by viewModel.allStatus.observeAsState(initial = emptyList())
 
         Row(
             modifier = Modifier
@@ -102,5 +109,52 @@ fun statusPage(viewModel: firestoreViewModel) {
             modifier = Modifier.padding(start = 15.dp),
             color = Color(0xFF616161)
         )
+
+        LazyColumn(){
+            items(items = allStatus) { eachStatus->
+                eachStatus.name?.let { name->
+                        statusModel(name = name, time = eachStatus.time, status = eachStatus.status)
+
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun statusModel(
+    name: String,
+    time: String,
+    status: MutableList<Bitmap>?
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(80.dp)
+            .clickable {},
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Spacer(modifier = Modifier.width(15.dp))
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier
+                .size(50.dp)
+                .clip(RoundedCornerShape(50))) {
+            if (status != null){
+                Image(painter = rememberAsyncImagePainter(status[0]), contentDescription = "")
+            }
+        }
+        Spacer(modifier = Modifier.width(10.dp))
+        Column(
+            modifier = Modifier.fillMaxHeight(),
+            verticalArrangement = Arrangement.Center
+        ) {
+            Text(
+                text = name,
+                fontSize = 18.sp,
+                fontWeight = FontWeight.SemiBold
+            )
+            Text(text = time, color = Color(0xFF616161))
+        }
     }
 }

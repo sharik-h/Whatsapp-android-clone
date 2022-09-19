@@ -9,10 +9,7 @@ import android.graphics.ImageDecoder
 import androidx.core.net.toUri
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.whatsapp_clone.data.callLogFormat
-import com.example.whatsapp_clone.data.detailFormat
-import com.example.whatsapp_clone.data.messageFormat
-import com.example.whatsapp_clone.data.userDetailsFormat
+import com.example.whatsapp_clone.data.*
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
@@ -38,7 +35,9 @@ class firestoreViewModel: ViewModel() {
     val notSeen: MutableLiveData<List<Pair<String,Int>>> = MutableLiveData<List<Pair<String,Int>>>()
     val callLogs: MutableLiveData<List<callLogFormat>> = MutableLiveData<List<callLogFormat>>()
     val statusList: MutableLiveData<MutableList<String>> = MutableLiveData<MutableList<String>>()
-
+    val allStatusUsers: MutableLiveData<List<String>> = MutableLiveData<List<String>>()
+    val allStatusList: MutableLiveData<List<statusListFormat>> = MutableLiveData<List<statusListFormat>>()
+    val allStatus: MutableLiveData<List<statusFormat>> = MutableLiveData<List<statusFormat>>()
 
     fun addNewUser(
         uid: String,
@@ -356,4 +355,92 @@ class firestoreViewModel: ViewModel() {
         }
         return BitmapList
     }
+
+    fun allStatusUsers() {
+        database.document("status/$myPhone")
+            .get()
+            .addOnSuccessListener {
+                val listOfUsers = mutableListOf<String>()
+                it.data?.forEach {
+                    if (it.value as Boolean) listOfUsers.add(it.key)
+                }
+                allStatusUsers.value = listOfUsers
+            }
+    }
+
+    fun getAllStatusNames(allStatusUser: List<String>) {
+        database.collection("status names")
+            .addSnapshotListener{ value, error ->
+                val documents = value?.documents
+                documents?.let { documents ->
+                    val statusList = ArrayList<statusListFormat>()
+                    documents.forEach { document ->
+                        if (allStatusUser.contains(document.id)){
+                            val list = ArrayList<String>()
+                            document.data?.forEach {
+                                list.add(it.value.toString())
+                            }
+                            statusList.add(statusListFormat(
+                                phone = document.id,
+                                allNames = list,
+                                name = list.first().toString().dropLast(12)
+                            ))
+                        }
+                    }
+                    allStatusList.value = statusList
+                }
+            }
+    }
+
+
+    fun saveStatus(phone: String, name: String, context: Context) {
+        storageref.child("status/$phone/$name")
+            .getBytes(Long.MAX_VALUE)
+            .addOnSuccessListener {
+                val bitmap = BitmapFactory.decodeByteArray(it, 0, it.size)
+                var name1 = name
+                name1 = "$name1.jpeg"
+                val fileOutputStream: FileOutputStream
+                try {
+                    fileOutputStream = context.openFileOutput(name1, Context.MODE_PRIVATE)
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 90, fileOutputStream)
+                    fileOutputStream.close()
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+    }
+
+
+    fun loadAllStatus(allStatusList: List<statusListFormat>, context: Context) {
+        val eachStatusFormat = mutableListOf<statusFormat>()
+        allStatusList.forEach { docs ->
+            val statusDocs = mutableListOf<Bitmap>()
+            docs.allNames?.forEach { doc ->
+                val name = "$doc.jpeg"
+                val fileInputStream : FileInputStream
+                var bitmap: Bitmap? = null
+                try{
+                    fileInputStream = context.openFileInput(name);
+                    bitmap = BitmapFactory.decodeStream(fileInputStream)
+                    statusDocs.add(bitmap)
+                    fileInputStream.close()
+                } catch(e: Exception) {
+                    e.printStackTrace()
+                    saveStatus(phone = docs.phone.toString(),name = doc, context = context)
+                }
+            }
+
+            eachStatusFormat.add(
+                statusFormat(
+                    phone = docs.phone,
+                    status = statusDocs,
+                    time =docs.name?.takeLast(12)!!.dropLast(7),
+                    name = docs.phone
+                )
+            )
+            allStatus.value = eachStatusFormat
+        }
+    }
+
 }
