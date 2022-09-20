@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import com.example.whatsapp_clone.R
 import com.example.whatsapp_clone.chatActivity.attachmentActivity
+import com.example.whatsapp_clone.satusActivity.viewStatusActivity
 import com.example.whatsapp_clone.viewmodel.firestoreViewModel
 
 @Composable
@@ -113,8 +114,18 @@ fun statusPage(viewModel: firestoreViewModel) {
         LazyColumn(){
             items(items = allStatus) { eachStatus->
                 eachStatus.name?.let { name->
-                        statusModel(name = name, time = eachStatus.time, status = eachStatus.status)
-
+                    var statusNames = mutableListOf<String>()
+                    allStatusList.forEach { eachPerson ->
+                        if (eachPerson.name!!.dropLast(4) == name) {
+                            statusNames = eachPerson.allNames!!
+                        }
+                    }
+                   statusModel(
+                       name = name,
+                       time = eachStatus.time,
+                       status = eachStatus.status,
+                       statusNames = statusNames
+                   )
                 }
             }
         }
@@ -125,13 +136,21 @@ fun statusPage(viewModel: firestoreViewModel) {
 fun statusModel(
     name: String,
     time: String,
-    status: MutableList<Bitmap>?
+    status: MutableList<Bitmap>?,
+    statusNames: MutableList<String>
 ) {
+    val context = LocalContext.current
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .height(80.dp)
-            .clickable {},
+            .clickable {
+                context.startActivity(Intent(context, viewStatusActivity::class.java)
+                        .putExtra("name", name)
+                        .putExtra("time", time)
+                        .putExtra("statusNames",statusNames.toTypedArray())
+                )
+            },
         verticalAlignment = Alignment.CenterVertically
     ) {
         Spacer(modifier = Modifier.width(15.dp))

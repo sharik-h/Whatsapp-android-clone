@@ -37,6 +37,7 @@
         <activity android:name=".chatActivity.chatDetailActivity"/>
         <activity android:name=".chatActivity.attachmentActivity"/>
         <activity android:name=".loginPages.profileSetupActivity"/>
+        <activity android:name=".satusActivity.viewStatusActivity"/>
     </application>
 
 </manifest>

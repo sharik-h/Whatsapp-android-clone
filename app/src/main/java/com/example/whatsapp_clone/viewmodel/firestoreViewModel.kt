@@ -443,4 +443,22 @@ class firestoreViewModel: ViewModel() {
         }
     }
 
+    fun loadStatusImages(context: Context, statusNames: Array<String>?): List<Bitmap> {
+        val statusDocs = mutableListOf<Bitmap>()
+        statusNames?.forEach { doc ->
+            val name = "$doc.jpeg"
+            val fileInputStream : FileInputStream
+            var bitmap: Bitmap? = null
+            try{
+                fileInputStream = context.openFileInput(name);
+                bitmap = BitmapFactory.decodeStream(fileInputStream)
+                statusDocs.add(bitmap)
+                fileInputStream.close()
+            } catch(e: Exception) {
+                e.printStackTrace()
+            }
+        }
+        return statusDocs
+    }
+
 }
