@@ -461,4 +461,8 @@ class firestoreViewModel: ViewModel() {
         return statusDocs
     }
 
+    fun statusViewed(name: String) {
+        database.document("status/$myPhone")
+            .update(mapOf(name to false))
+    }
 }
