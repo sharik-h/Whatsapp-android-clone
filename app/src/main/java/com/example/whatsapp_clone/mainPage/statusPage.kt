@@ -60,7 +60,12 @@ fun statusPage(viewModel: firestoreViewModel) {
                 .fillMaxWidth()
                 .height(80.dp)
                 .clickable {
-                    glauncher.launch("image/*")
+                    if (myStatus.isEmpty()){
+                        glauncher.launch("image/*")
+                    }else{
+                        context.startActivity(Intent(context, viewStatusActivity::class.java)
+                            .putExtra("name","My Status"))
+                    }
                 },
             verticalAlignment = Alignment.CenterVertically
         ) {

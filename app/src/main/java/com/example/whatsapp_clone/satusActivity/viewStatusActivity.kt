@@ -1,5 +1,6 @@
 package com.example.whatsapp_clone.satusActivity
 
+import android.graphics.Bitmap
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -36,15 +37,18 @@ class viewStatusActivity: ComponentActivity() {
         val time = intent.getStringExtra("time")
         val statusNames = intent.getStringArrayExtra("statusNames")
         val viewModel: firestoreViewModel by viewModels()
+        if (statusNames.isNullOrEmpty()) {
+            viewModel.loadMyStatus(this)
+        }
         setContent {
-            statusViewPage(name = name!!, time = time!!, viewModel, statusNames)
+            statusViewPage(name = name!!, time = time, viewModel, statusNames)
         }
     }
 
     @Composable
     private fun statusViewPage(
         name: String,
-        time: String,
+        time: String?,
         viewModel: firestoreViewModel,
         statusNames: Array<String>?
     ) {
@@ -52,15 +56,21 @@ class viewStatusActivity: ComponentActivity() {
         val optionImg = painterResource(id = R.drawable.option_img)
         val userImg = painterResource(id = R.drawable.circle_img)
         val context = LocalContext.current
-        val Images = viewModel.loadStatusImages(context, statusNames)
-        var image by remember { mutableStateOf(Images[0]) }
-        val profilePic = viewModel.loadImageBitmap(context = context, name1 = name, extension = "jpeg")
-        var size = statusNames!!.size
-        var n by remember { mutableStateOf(0) }
-        val finishTime: Int = 5000 * size
-        Timer().schedule(timerTask{
-            finish()
-        },finishTime.toLong())
+        var images = listOf<Bitmap>()
+        if (statusNames != null){
+            images = viewModel.loadStatusImages(context, statusNames)
+        }else{
+            images = viewModel.loadMyStatus(context)
+        }
+        if (!images.isNullOrEmpty()) {
+            var image by remember { mutableStateOf(images[0]) }
+            val profilePic = viewModel.loadImageBitmap(context = context, name1 = name, extension = "jpeg")
+            var size = images!!.size
+            var n by remember { mutableStateOf(0) }
+            val finishTime: Int = 5000 * size
+            Timer().schedule(timerTask {
+                finish()
+            }, finishTime.toLong())
 
         val infiniteTransition = rememberInfiniteTransition()
         val progressAnimationValue by infiniteTransition.animateFloat(
@@ -78,8 +88,11 @@ class viewStatusActivity: ComponentActivity() {
         ) {
 
 
-            if (progressAnimationValue >= 0.999f && n < Images.size-1){
-                    image = Images[++n]
+            if (progressAnimationValue >= 0.989f && n < images.size-1){
+                    image = images[++n]
+            }
+            if (n == images.size-1) {
+                viewModel.statusViewed(name)
             }
             Image(painter = rememberAsyncImagePainter(image), contentDescription = "")
         }
@@ -114,12 +127,14 @@ class viewStatusActivity: ComponentActivity() {
                 Spacer(modifier = Modifier.width(10.dp))
                Column(verticalArrangement = Arrangement.Center) {
                    Text(text = name, fontSize = 18.sp, color = Color.White)
-                   Text(text = time, color = Color.White)
+                   time?.let {
+                       Text(text = it, color = Color.White)
+                   }
                }
                 Spacer(modifier = Modifier.weight(0.7f))
                 Image(painter = optionImg, contentDescription = "")
             }
         }
-
+        }
     }
 }
