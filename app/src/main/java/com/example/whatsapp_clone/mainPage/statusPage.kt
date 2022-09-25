@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -27,6 +28,7 @@ import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import com.example.whatsapp_clone.R
 import com.example.whatsapp_clone.chatActivity.attachmentActivity
+import com.example.whatsapp_clone.satusActivity.myStatusDetailActivity
 import com.example.whatsapp_clone.satusActivity.viewStatusActivity
 import com.example.whatsapp_clone.viewmodel.firestoreViewModel
 
@@ -35,6 +37,7 @@ fun statusPage(viewModel: firestoreViewModel) {
     Column(Modifier.fillMaxSize()) {
         val userImg = painterResource(id = R.drawable.circle_img)
         val addImg = painterResource(id = R.drawable.add_circle)
+        val optionImg = painterResource(id = R.drawable.option_horixzontal_green)
         val context = LocalContext.current
         viewModel.loadMyStatus(context)
         var imageUri by remember { mutableStateOf<Uri?>(null) }
@@ -107,6 +110,14 @@ fun statusPage(viewModel: firestoreViewModel) {
                     fontWeight = FontWeight.SemiBold
                 )
                 Text(text = "Tap to add status updates", color = Color(0xFF616161))
+            }
+            Spacer(modifier = Modifier.weight(0.5f))
+            if (!myStatus.isEmpty()) {
+                IconButton(onClick = {
+                    context.startActivity(Intent(context, myStatusDetailActivity::class.java))
+                }) {
+                    Image(painter = optionImg, contentDescription = "")
+                }
             }
         }
         Text(

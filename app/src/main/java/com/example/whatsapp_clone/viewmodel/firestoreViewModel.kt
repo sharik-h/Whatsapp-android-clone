@@ -6,20 +6,22 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.ImageDecoder
+import android.util.Log
 import androidx.core.net.toUri
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.whatsapp_clone.data.*
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
+import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.time.LocalDate
 import java.time.LocalTime
-import java.util.*
 import kotlin.collections.ArrayList
 
 class firestoreViewModel: ViewModel() {
@@ -38,6 +40,10 @@ class firestoreViewModel: ViewModel() {
     val allStatusUsers: MutableLiveData<List<String>> = MutableLiveData<List<String>>()
     val allStatusList: MutableLiveData<List<statusListFormat>> = MutableLiveData<List<statusListFormat>>()
     val allStatus: MutableLiveData<List<statusFormat>> = MutableLiveData<List<statusFormat>>()
+    var loadAllStatus: MutableLiveData<List<Bitmap>> = MutableLiveData<List<Bitmap>>()
+    val loadmystatusName: MutableLiveData<List<String>> = MutableLiveData<List<String>>()
+    var statusViews: MutableLiveData<MutableMap<String,Int>> = MutableLiveData<MutableMap<String, Int>>()
+    var loadmysttus: MutableList<myStatusFormat> = mutableListOf()
 
     fun addNewUser(
         uid: String,
@@ -314,6 +320,8 @@ class firestoreViewModel: ViewModel() {
 
         database.document("status names/$myPhone").update(currentTime.dropLast(4) ,name)
 
+        database.document("statusViews/$myPhone").update(currentTime.dropLast(4), 0)
+
         database.collection("whatsappclone/chats/$currentUser")
             .addSnapshotListener { value, error ->
                 value?.let {
@@ -353,6 +361,7 @@ class firestoreViewModel: ViewModel() {
                 e.printStackTrace()
             }
         }
+        loadAllStatus.value = BitmapList
         return BitmapList
     }
 
@@ -464,5 +473,82 @@ class firestoreViewModel: ViewModel() {
     fun statusViewed(name: String) {
         database.document("status/$myPhone")
             .update(mapOf(name to false))
+    }
+
+    fun updateView(phone: String, name: String) {
+        database.document("statusViews/$phone")
+            .get()
+            .addOnSuccessListener {  snapShot ->
+                val docs = snapShot.data
+                docs?.forEach {  field->
+                   if (field.key == name.dropLast(4).drop(13)){
+                       database.document("statusViews/$phone")
+                           .update(name.dropLast(4).drop(13),field.value.toString().toInt()+1)
+                   }
+               }
+            }
+    }
+
+    fun deleteStatus(name: String, context: Context) {
+        database.document("status names/$myPhone")
+            .update(mapOf(name to FieldValue.delete()))
+        database.document("statusViews/$myPhone")
+            .update(mapOf(name to FieldValue.delete()))
+        try {
+            val file: File = context.getFileStreamPath(name)
+            file.delete()
+        }catch (e: Exception){
+            e.printStackTrace()
+        }
+    }
+
+    fun loadmystatusName() {
+        database.document("status names/$myPhone")
+            .get()
+            .addOnSuccessListener { docSnapShot ->
+                val doc = mutableListOf<String>()
+                docSnapShot.data?.forEach {
+                    doc.add(it.value.toString())
+                }
+                loadmystatusName.value = doc
+            }
+    }
+
+    fun getViewDetails() {
+        database.document("statusViews/$myPhone")
+            .get()
+            .addOnSuccessListener { docSnapShot ->
+                val viewDetails = mutableMapOf<String,Int>()
+                docSnapShot.data?.forEach { field->
+                        viewDetails.set(field.key, field.value.toString().toInt())
+                }
+                statusViews.value = viewDetails
+            }
+    }
+
+    fun loadmysttus(names: List<String>, viewDetails: MutableMap<String, Int>, context: Context): MutableList<myStatusFormat> {
+        val loadmysttuss = mutableListOf<myStatusFormat>()
+        names.forEach { name ->
+            val name = "$name.jpeg"
+            val fileInputStream: FileInputStream
+            var bitmap: Bitmap? = null
+            try {
+                fileInputStream = context.openFileInput(name);
+                bitmap = BitmapFactory.decodeStream(fileInputStream)
+                loadmysttuss.add(
+                    myStatusFormat(
+                        image = bitmap,
+                        name = name,
+                        time = name.dropLast(12).drop(13),
+                        view = viewDetails[name.drop(13).dropLast(9)].toString().toInt()
+                    )
+                )
+                fileInputStream.close()
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+            loadmysttus = loadmysttuss
+        }
+        return loadmysttuss
     }
 }

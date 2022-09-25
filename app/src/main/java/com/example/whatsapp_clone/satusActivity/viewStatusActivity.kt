@@ -91,6 +91,9 @@ class viewStatusActivity: ComponentActivity() {
             if (progressAnimationValue >= 0.989f && n < images.size-1){
                     image = images[++n]
             }
+            if(progressAnimationValue > 0.998f){
+                viewModel.updateView(name = statusNames!![n], phone = name)
+            }
             if (n == images.size-1) {
                 viewModel.statusViewed(name)
             }
