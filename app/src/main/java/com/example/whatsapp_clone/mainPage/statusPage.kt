@@ -52,7 +52,7 @@ fun statusPage(viewModel: firestoreViewModel) {
         var myStatus = mutableListOf<Bitmap>()
         myStatus = viewModel.loadMyStatus(context)
         viewModel.allStatusUsers()
-        val allStatusUser by viewModel.allStatusUsers.observeAsState(initial = emptyList())
+        val allStatusUser by viewModel.allStatusUsers.observeAsState(initial = emptyMap())
         viewModel.getAllStatusNames(allStatusUser)
         val allStatusList by viewModel.allStatusList.observeAsState(initial = emptyList())
         viewModel.loadAllStatus(allStatusList = allStatusList, context = context)
@@ -120,21 +120,37 @@ fun statusPage(viewModel: firestoreViewModel) {
                 }
             }
         }
-        Text(
-            text = "Recent updates",
-            fontWeight = FontWeight.SemiBold,
-            modifier = Modifier.padding(start = 15.dp),
-            color = Color(0xFF616161)
-        )
-
+        var uvFirst = 0
+        var vFirst = 0
         LazyColumn(){
-            items(items = allStatus) { eachStatus->
+            val items = allStatus.sortedBy { it.viewed }.reversed()
+            items(items = items) { eachStatus->
                 eachStatus.name?.let { name->
                     var statusNames = mutableListOf<String>()
                     allStatusList.forEach { eachPerson ->
                         if (eachPerson.name!!.dropLast(4) == name) {
                             statusNames = eachPerson.allNames!!
                         }
+                    }
+                    if (items.first().viewed == true && uvFirst == 0) {
+                        uvFirst++
+                        Text(
+                            text = "Recent updates",
+                            fontWeight = FontWeight.SemiBold,
+                            modifier = Modifier.padding(start = 15.dp),
+                            color = Color(0xFF616161)
+                        )
+                    }
+                    if (eachStatus.viewed == false && vFirst == 0) {
+                        if (uvFirst == 1){
+                            Spacer(modifier = Modifier.height(25.dp))
+                        }
+                        vFirst++
+                        Text(text = "Viewed updates",
+                            fontWeight = FontWeight.SemiBold,
+                            modifier = Modifier.padding(start = 15.dp),
+                            color = Color(0xFF616161)
+                        )
                     }
                    statusModel(
                        name = name,

@@ -6,5 +6,6 @@ data class statusFormat (
     val name: String? = null,
     val phone: String? = null,
     val time: String,
-    val status: MutableList<Bitmap>? = null
+    val status: MutableList<Bitmap>? = null,
+    val viewed: Boolean? = false
 )

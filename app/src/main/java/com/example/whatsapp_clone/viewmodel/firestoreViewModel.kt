@@ -37,7 +37,7 @@ class firestoreViewModel: ViewModel() {
     val notSeen: MutableLiveData<List<Pair<String,Int>>> = MutableLiveData<List<Pair<String,Int>>>()
     val callLogs: MutableLiveData<List<callLogFormat>> = MutableLiveData<List<callLogFormat>>()
     val statusList: MutableLiveData<MutableList<String>> = MutableLiveData<MutableList<String>>()
-    val allStatusUsers: MutableLiveData<List<String>> = MutableLiveData<List<String>>()
+    val allStatusUsers: MutableLiveData<MutableMap<String, Boolean>> = MutableLiveData<MutableMap<String, Boolean>>()
     val allStatusList: MutableLiveData<List<statusListFormat>> = MutableLiveData<List<statusListFormat>>()
     val allStatus: MutableLiveData<List<statusFormat>> = MutableLiveData<List<statusFormat>>()
     var loadAllStatus: MutableLiveData<List<Bitmap>> = MutableLiveData<List<Bitmap>>()
@@ -369,15 +369,15 @@ class firestoreViewModel: ViewModel() {
         database.document("status/$myPhone")
             .get()
             .addOnSuccessListener {
-                val listOfUsers = mutableListOf<String>()
+                val listOfUsers = mutableMapOf<String, Boolean>()
                 it.data?.forEach {
-                    if (it.value as Boolean) listOfUsers.add(it.key)
+                    listOfUsers.set(it.key , it.value as Boolean)
                 }
                 allStatusUsers.value = listOfUsers
             }
     }
 
-    fun getAllStatusNames(allStatusUser: List<String>) {
+    fun getAllStatusNames(allStatusUser: Map<String, Boolean>) {
         database.collection("status names")
             .addSnapshotListener{ value, error ->
                 val documents = value?.documents
@@ -392,7 +392,8 @@ class firestoreViewModel: ViewModel() {
                             statusList.add(statusListFormat(
                                 phone = document.id,
                                 allNames = list,
-                                name = list.first().toString().dropLast(12)
+                                name = list.first().toString().dropLast(12),
+                                viewed = allStatusUser[document.id]
                             ))
                         }
                     }
@@ -445,7 +446,8 @@ class firestoreViewModel: ViewModel() {
                     phone = docs.phone,
                     status = statusDocs,
                     time =docs.name?.takeLast(12)!!.dropLast(7),
-                    name = docs.phone
+                    name = docs.phone,
+                    viewed = docs.viewed
                 )
             )
             allStatus.value = eachStatusFormat
