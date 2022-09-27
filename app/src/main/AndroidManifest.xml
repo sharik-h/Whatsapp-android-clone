@@ -39,6 +39,7 @@
         <activity android:name=".loginPages.profileSetupActivity"/>
         <activity android:name=".satusActivity.viewStatusActivity"/>
         <activity android:name=".satusActivity.myStatusDetailActivity"/>
+        <activity android:name=".callDetailActivity.callDetailActivity"/>
     </application>
 
 </manifest>

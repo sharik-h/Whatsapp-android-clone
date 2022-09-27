@@ -3,6 +3,7 @@ package com.example.whatsapp_clone.modelItems
 import android.content.Intent
 import android.net.Uri
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
@@ -15,6 +16,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.whatsapp_clone.R
+import com.example.whatsapp_clone.callDetailActivity.callDetailActivity
 import com.example.whatsapp_clone.viewmodel.firestoreViewModel
 
 
@@ -41,7 +43,10 @@ fun callLogModel(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .height(75.dp),
+            .height(75.dp)
+            .clickable {
+                 context.startActivity(Intent(context, callDetailActivity::class.java))
+            },
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center
     ) {
