@@ -5,16 +5,19 @@ import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.rememberAsyncImagePainter
 import com.example.whatsapp_clone.R
 import com.example.whatsapp_clone.callDetailActivity.callDetailActivity
 import com.example.whatsapp_clone.viewmodel.firestoreViewModel
@@ -38,6 +41,7 @@ fun callLogModel(
     val context = LocalContext.current
     val phone_intent = Intent(Intent.ACTION_CALL)
     phone_intent.data = Uri.parse("tel:$phone")
+    val loadUserImg = viewModel.loadImageBitmap(context = context, name1 = phone!!, extension = "jpeg")
 
 
     Row(
@@ -45,14 +49,33 @@ fun callLogModel(
             .fillMaxWidth()
             .height(75.dp)
             .clickable {
-                 context.startActivity(Intent(context, callDetailActivity::class.java))
+                context.startActivity(
+                    Intent(context, callDetailActivity::class.java)
+                        .putExtra("name", Name)
+                        .putExtra("time", time.dropLast(7))
+                        .putExtra("phone", phone)
+                )
             },
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center
     ) {
         Spacer(modifier = Modifier.width(10.dp))
         IconButton(onClick = { /*TODO*/ }) {
-            Image(painter = userImg, contentDescription = "", modifier = Modifier.size(55.dp))
+            if (loadUserImg != null) {
+                Image(
+                    painter = rememberAsyncImagePainter(loadUserImg),
+                    contentDescription = "",
+                    modifier = Modifier
+                        .size(50.dp)
+                        .clip(RoundedCornerShape(50))
+                )
+            }else {
+                Image(
+                    painter = userImg,
+                    contentDescription = "",
+                    modifier = Modifier.size(55.dp)
+                )
+            }
         }
         Spacer(modifier = Modifier.width(10.dp))
         Column(modifier = Modifier.weight(0.75f)) {
