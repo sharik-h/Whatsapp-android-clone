@@ -1,5 +1,7 @@
 package com.example.whatsapp_clone.callDetailActivity
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -23,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import com.example.whatsapp_clone.R
+import com.example.whatsapp_clone.chatActivity.chatActivity
 import com.example.whatsapp_clone.viewmodel.firestoreViewModel
 
 class callDetailActivity: ComponentActivity() {
@@ -50,6 +53,8 @@ class callDetailActivity: ComponentActivity() {
             val userImg = painterResource(id = R.drawable.circle_img)
             val context = LocalContext.current
             val loadUserImg = viewModel.loadImageBitmap(name1 = phone, context = context, extension = "jpeg")
+            val phone_intent = Intent(Intent.ACTION_CALL)
+            phone_intent.data = Uri.parse("tel:$phone")
 
             TopAppBar(
                 modifier = Modifier.fillMaxWidth(),
@@ -67,7 +72,11 @@ class callDetailActivity: ComponentActivity() {
                     fontWeight = FontWeight.SemiBold
                 )
                 Spacer(modifier = Modifier.weight(0.5f))
-                IconButton(onClick = { /*TODO*/ }) {
+                IconButton(onClick = {
+                    context.startActivity(Intent(context, chatActivity::class.java)
+                        .putExtra("name", name)
+                        .putExtra("phone", phone))
+                }) {
                     Image(painter = chatImg, contentDescription = "")
                 }
                 IconButton(onClick = { /*TODO*/ }) {
@@ -109,7 +118,10 @@ class callDetailActivity: ComponentActivity() {
                 IconButton(onClick = { /*TODO*/ }) {
                     Image(painter = phoneImg, contentDescription = "")
                 }
-                IconButton(onClick = { /*TODO*/ }) {
+                IconButton(onClick = {
+                    context.startActivity(phone_intent)
+                    viewModel.addToCallLog(name = name, phone = phone)
+                }) {
                     Image(painter = cameraImg, contentDescription = "")
                 }
             }
