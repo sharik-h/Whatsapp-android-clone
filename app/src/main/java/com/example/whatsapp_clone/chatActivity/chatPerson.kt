@@ -16,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -45,10 +46,17 @@ fun chatPerson( name: String, phone: String, msgdate: String?, viewModel: firest
     val micImg = painterResource(id = R.drawable.mic_img_white)
     val chatBgImg = painterResource(id = R.drawable.chat_background)
     val sendImg = painterResource(id = R.drawable.send_white)
+    val documentImg = painterResource(id = R.drawable.document_white)
+    val cameraWhiteImg = painterResource(id = R.drawable.camera_img)
+    val galleryImg = painterResource(id = R.drawable.gallery_image)
+    val audioImg = painterResource(id = R.drawable.audio_white)
+    val locationImg = painterResource(id = R.drawable.location_white)
+    val contactImg = painterResource(id = R.drawable.person_white)
     var micOrSend = Pair(micImg, 30)
     val cdate = LocalDate.now().toString()
     var tempDate = msgdate
     var message by remember { mutableStateOf("") }
+    var expanded by remember { mutableStateOf(false) }
     val chats by viewModel.chats.observeAsState(initial = emptyList())
     val unSeen by viewModel.unSeen.observeAsState()
     val context = LocalContext.current
@@ -227,7 +235,7 @@ fun chatPerson( name: String, phone: String, msgdate: String?, viewModel: firest
                         ) {
                           Box(
                               contentAlignment = Alignment.BottomEnd,
-                              modifier =Modifier
+                              modifier = Modifier
                                   .heightIn(min = 40.dp, max = 360.dp)
                                   .widthIn(min = 40.dp, max = 280.dp)
                                   .clip(RoundedCornerShape(5))
@@ -256,7 +264,7 @@ fun chatPerson( name: String, phone: String, msgdate: String?, viewModel: firest
                         ) {
                             Box(
                                 contentAlignment = Alignment.BottomEnd,
-                                modifier =Modifier
+                                modifier = Modifier
                                     .heightIn(min = 40.dp, max = 360.dp)
                                     .widthIn(min = 40.dp, max = 280.dp)
                                     .clip(RoundedCornerShape(5))
@@ -314,10 +322,25 @@ fun chatPerson( name: String, phone: String, msgdate: String?, viewModel: firest
                         )
                     )
                     IconButton(onClick = {
-                        launcher.launch("image/*")
+                    expanded = true
                     }) {
                         Image(painter = attachFileImg, contentDescription = "")
+                    DropdownMenu(
+                        expanded = expanded,
+                        onDismissRequest = { expanded = false }
+                    ) {
+                        Row(Modifier.padding(horizontal = 25.dp, vertical = 15.dp)) {
+                            buttonSample(icon = documentImg, name = "Document", color = 0xFF9060FF, use =  "" )
+                            buttonSample(icon = cameraWhiteImg, name = "Camera", color = 0xFFF35C7C, use = "")
+                            buttonSample(icon = galleryImg, name = "Gallery", color = 0xFFA145DB, use = "")
+                        }
+                        Row(Modifier.padding(horizontal = 25.dp, vertical = 5.dp)) {
+                            buttonSample(icon = audioImg, name = "Audio", color = 0xFFF07B55, use = "")
+                            buttonSample(icon = locationImg, name = "Location", color = 0xFF3DB86F, use ="")
+                            buttonSample(icon = contactImg, name = "Contact", color = 0xFF096097, use ="")
+                        }
                     }
+                }
                     if (message == "") {
                         IconButton(onClick = { /*TODO*/ }) {
                             Image(painter = cameraImg, contentDescription = "")
@@ -350,11 +373,48 @@ fun chatPerson( name: String, phone: String, msgdate: String?, viewModel: firest
                             painter = micOrSend.first,
                             contentDescription = "",
                             alignment = Alignment.Center,
-                            modifier = Modifier.padding(padd).size(micOrSend.second.dp)
+                            modifier = Modifier
+                                .padding(padd)
+                                .size(micOrSend.second.dp)
                         )
                     }
                 }
 
             }
+        }
+}
+
+@Composable
+fun buttonSample(
+    icon: Painter,
+    name: String,
+    color: Long,
+    use: String
+) {
+    val context = LocalContext.current
+    var imageUri by remember { mutableStateOf<Uri?>(null) }
+    val launcher = rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri: Uri? ->
+        imageUri = uri
+        context.startActivity(Intent(context, attachmentActivity::class.java)
+            .putExtra("imageUri",imageUri.toString())
+            .putExtra("name", name))
+    }
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .width(100.dp)
+                .height(95.dp)
+                .clickable { launcher.launch(use) }) {
+            IconButton(
+                onClick = {},
+                modifier = Modifier
+                    .padding(bottom = 10.dp)
+                    .size(55.dp)
+                    .clip(RoundedCornerShape(50))
+                    .background(Color(color))
+            ) {
+                Image(painter = icon, contentDescription = "")
+            }
+            Text(text = name)
         }
 }
