@@ -4,12 +4,11 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.IconButton
+import androidx.compose.material.*
 import androidx.compose.material.SnackbarDefaults.backgroundColor
-import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.RoundRect
@@ -18,6 +17,7 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -43,6 +43,7 @@ fun chatDetailsPage(name: String, phone: String, lstseen: String?, viewModel: fi
     val reportImg = painterResource(id = R.drawable.thumb_down_red)
     val context = LocalContext.current
     var profileImg = viewModel.loadImageBitmap(context, phone, "jpeg")
+    var isDropDown by remember{ mutableStateOf(false)}
 
     Box(Modifier.fillMaxSize()) {
 
@@ -165,14 +166,26 @@ fun chatDetailsPage(name: String, phone: String, lstseen: String?, viewModel: fi
                 ItemSample(
                     painterIcon = notificationImg,
                     optionTitle = "Mute notificaion",
+                    title = "Mute notifications for...",
+                    optionList = listOf("8 hours", "1 week", "Always"),
+                    confirmMsg = "OK",
+                    dismissMsg = "CANCEL"
                 )
                 ItemSample(
                     painterIcon = musicImg,
                     optionTitle = "Custom notification",
+                    title = "Custom notifications",
+                    msg = "This feature is not yet available to users.",
+                    confirmMsg = "OK",
+                    dismissMsg = "CLOSE"
                 )
                 ItemSample(
                     painterIcon = galleryImg,
                     optionTitle = "Media visibility",
+                    title = "Show newly downloaded media from this chat in your phone's gallery?",
+                    optionList = listOf("Default (Yes)", "Yes", "No"),
+                    confirmMsg = "OK",
+                    dismissMsg = "CANCEL"
                 )
             }
             Spacer(modifier = Modifier.height(15.dp))
@@ -186,11 +199,19 @@ fun chatDetailsPage(name: String, phone: String, lstseen: String?, viewModel: fi
                 ItemSample(
                     painterIcon = lockImg,
                     optionTitle = "Encryption",
-                    optionDiscription = "Messages and calls are end-to-end \nencrypted. Tap to verify"
+                    optionDiscription = "Messages and calls are end-to-end \nencrypted. Tap to verify",
+                    title = "Encryption",
+                    msg = "This feature is not yet available to users.",
+                    confirmMsg = "OK",
+                    dismissMsg = "CLOSE"
                 )
                 ItemSample(
                     painterIcon = disappearingImg,
                     optionTitle = "Disappearing messages",
+                    title = "Disappearing messages",
+                    msg = "This feature is not yet available to users.",
+                    confirmMsg = "OK",
+                    dismissMsg = "CLOSE"
                 )
             }
             Spacer(modifier = Modifier.height(15.dp))
@@ -202,13 +223,21 @@ fun chatDetailsPage(name: String, phone: String, lstseen: String?, viewModel: fi
             ) {
                 ItemSample(
                     painterIcon = blockImg,
-                    optionTitle = "Block (name)",
-                    isRed = true
+                    optionTitle = "Block $name",
+                    isRed = true,
+                    title = "Block $name?",
+                    confirmMsg = "BLOCK",
+                    dismissMsg = "CANCEL",
                 )
                 ItemSample(
                     painterIcon = reportImg,
-                    optionTitle = "Report (name)",
-                    isRed = true
+                    optionTitle = "Report $name",
+                    isRed = true,
+                    title = "Report $name",
+                    confirmMsg = "REPORT",
+                    dismissMsg = "CANCEL",
+                    msg =  "The last five messages from this contact " +
+                            "will be forwarded to whatsapp.This contact will not be notified",
                 )
             }
         }
@@ -218,7 +247,53 @@ fun chatDetailsPage(name: String, phone: String, lstseen: String?, viewModel: fi
             Image(painter = backImg, contentDescription = "")
         }
         Spacer(modifier = Modifier.weight(1f))
-        IconButton(onClick = { /*TODO*/ }) {
+        IconButton(onClick = { isDropDown = true }) {
+            DropdownMenu(
+                expanded = isDropDown,
+                onDismissRequest = { isDropDown = false},
+                modifier = Modifier.width(195.dp).padding(top = 10.dp, start = 15.dp)
+            ) {
+                Text(
+                    text = "Share",
+                    color = Color.Black,
+                    fontSize = 17.sp,
+                    textAlign = TextAlign.Start,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .size(width = 65.dp, height = 42.dp)
+                        .clickable { isDropDown = false }
+                )
+                Text(
+                    text = "Edit",
+                    color = Color.Black,
+                    fontSize = 17.sp,
+                    textAlign = TextAlign.Start,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .size(width = 65.dp, height = 42.dp)
+                        .clickable { isDropDown = false }
+                )
+                Text(
+                    text = "View in address book",
+                    color = Color.Black,
+                    fontSize = 17.sp,
+                    textAlign = TextAlign.Start,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .size(width = 65.dp, height = 42.dp)
+                        .clickable { isDropDown = false }
+                )
+                Text(
+                    text = "Verify security code",
+                    color = Color.Black,
+                    fontSize = 17.sp,
+                    textAlign = TextAlign.Start,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .size(width = 65.dp, height = 42.dp)
+                        .clickable { isDropDown = false }
+                )
+            }
             Image(painter = optionImg, contentDescription = "")
         }
     }
@@ -229,13 +304,19 @@ fun ItemSample(
     painterIcon: Painter,
     optionTitle: String,
     optionDiscription: String = "",
-    isRed: Boolean = false
+    isRed: Boolean = false,
+    title: String? = null,
+    confirmMsg: String? = null,
+    dismissMsg: String? = null,
+    msg: String? = null,
+    optionList: List<String>? = null
 ) {
+    var showAlert by remember { mutableStateOf(false) }
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .height(55.dp)
-            .clickable { },
+            .clickable { showAlert = true },
         verticalAlignment = Alignment.CenterVertically
     ) {
         Spacer(modifier = Modifier.width(20.dp))
@@ -251,6 +332,43 @@ fun ItemSample(
             if (optionDiscription != "") {
                 Text(text = optionDiscription, color = Color(0xFF818584))
             }
+        }
+    }
+    if (showAlert) {
+        title?.let {
+            AlertDialog(
+                onDismissRequest = { showAlert = false },
+                confirmButton = {
+                    TextButton(onClick = { showAlert = false }) {
+                        Text(text = confirmMsg!!, color = Color.Black)
+                    }
+                },
+                dismissButton = {
+                    TextButton(onClick = { showAlert = false }) {
+                        Text(text = dismissMsg!!, color = Color.Black)
+                    }
+                },
+                title = { Text(text = it, fontWeight = FontWeight.SemiBold, fontSize = 22.sp) },
+                text = {
+                    if (msg != null) {
+                        Text(text = msg)
+                    }
+                    optionList?.let {
+                        var selected by remember{ mutableStateOf("")}
+                            Column {
+                                it.forEach {
+                                    Row(verticalAlignment = CenterVertically) {
+                                        RadioButton(
+                                            selected = selected == it,
+                                            onClick = { selected = it }
+                                        )
+                                        Text(text = it, fontSize = 18.sp)
+                                }
+                            }
+                        }
+                    }
+                }
+            )
         }
     }
 }
