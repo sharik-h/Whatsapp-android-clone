@@ -6,9 +6,10 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.whatsapp_clone.settingsPages.*
+import com.example.whatsapp_clone.viewmodel.firestoreViewModel
 
 @Composable
-fun settingsNavGraph(navHostController: NavHostController) {
+fun settingsNavGraph(navHostController: NavHostController, viewModel: firestoreViewModel) {
     NavHost(
         navController = navHostController,
         startDestination = settingsScreen.mainSetting.route )
@@ -17,7 +18,7 @@ fun settingsNavGraph(navHostController: NavHostController) {
             MainSettings(navHostController = navHostController)
         }
         composable(route = settingsScreen.profileSetting.route) {
-            profileSettingsPage()
+            profileSettingsPage(viewModel)
         }
         composable(route = settingsScreen.accountSetting.route) {
             accountSettingsPage()

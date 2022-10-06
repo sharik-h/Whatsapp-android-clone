@@ -4,12 +4,15 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.core.app.ActivityCompat
 import androidx.navigation.compose.rememberNavController
 import com.example.whatsapp_clone.settingNavigation.settingsNavGraph
+import com.example.whatsapp_clone.viewmodel.firestoreViewModel
 
 class settingActivity: ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+        val viewModel: firestoreViewModel by viewModels()
         super.onCreate(savedInstanceState)
         val permissionRequest = ActivityCompat.checkSelfPermission(this,  android.Manifest.permission.READ_CONTACTS)
         val permissionGranted = PackageManager.PERMISSION_GRANTED
@@ -18,7 +21,7 @@ class settingActivity: ComponentActivity() {
         }
         setContent {
             val navHostController = rememberNavController()
-            settingsNavGraph(navHostController = navHostController)
+            settingsNavGraph(navHostController = navHostController , viewModel= viewModel)
         }
     }
 }

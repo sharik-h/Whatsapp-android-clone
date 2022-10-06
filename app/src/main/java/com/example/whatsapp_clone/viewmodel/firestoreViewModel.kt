@@ -30,6 +30,7 @@ class firestoreViewModel: ViewModel() {
     val storageref = Firebase.storage.reference
     val currentUser = FirebaseAuth.getInstance().uid
     val myPhone = FirebaseAuth.getInstance().currentUser?.phoneNumber
+    var myName : MutableLiveData<String> = MutableLiveData<String>()
     val userDetails: MutableLiveData<List<userDetailsFormat>> = MutableLiveData<List<userDetailsFormat>>()
     var allAvailableUsers : MutableLiveData<List<String>> = MutableLiveData<List<String>>()
     val chats: MutableLiveData<List<messageFormat>> = MutableLiveData<List<messageFormat>>()
@@ -60,6 +61,16 @@ class firestoreViewModel: ViewModel() {
                 .child("phone/$Phone")
                 .putFile(uri.toUri())
         }
+    }
+
+    fun getMyName() {
+       database
+            .document("users/$myPhone")
+            .get()
+            .addOnSuccessListener {
+                val details = it.toObject(detailFormat::class.java)
+                myName.value = details?.name
+            }
     }
 
     fun getData(context: Context): MutableList<detailFormat> {

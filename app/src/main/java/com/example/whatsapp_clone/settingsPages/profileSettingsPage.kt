@@ -4,24 +4,31 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Divider
 import androidx.compose.material.TopAppBar
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.InspectableModifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.rememberAsyncImagePainter
 import com.example.whatsapp_clone.R
+import com.example.whatsapp_clone.viewmodel.firestoreViewModel
+import com.google.firebase.auth.FirebaseAuth
 
-@Preview(showBackground = true)
 @Composable
-fun profileSettingsPage() {
+fun profileSettingsPage(viewModel: firestoreViewModel) {
     val backArrowImg = painterResource(id = R.drawable.arrow_back)
     val roundedUserImg = painterResource(id = R.drawable.circle_img)
     val userImg = painterResource(id = R.drawable.person_img)
@@ -30,7 +37,11 @@ fun profileSettingsPage() {
     val circleImg = painterResource(id = R.drawable.circlebg_img)
     val cameraImg = painterResource(id = R.drawable.camera_img)
     val editImg = painterResource(id = R.drawable.edit_img)
-
+    val context = LocalContext.current
+    val number = FirebaseAuth.getInstance().currentUser?.phoneNumber
+    viewModel.getMyName()
+    val myName by viewModel.myName.observeAsState()
+    val profilePic = viewModel.loadImageBitmap(context,number!!,"jpeg")
     Column(modifier = Modifier.fillMaxSize()) {
 
         TopAppBar(elevation = 0.dp, backgroundColor = Color(0xFF008268)) {
@@ -45,12 +56,23 @@ fun profileSettingsPage() {
             .fillMaxWidth()
             .padding(top = 10.dp, bottom = 15.dp), horizontalArrangement = Arrangement.Center ) {
             IconButton(onClick = { /*TODO*/ }){
-                Box() {
-                    Image(
-                        painter = roundedUserImg,
-                        contentDescription = "",
-                        modifier = Modifier.size(190.dp)
-                    )
+                Box {
+                    if (profilePic == null) {
+                        Image(
+                            painter = roundedUserImg,
+                            contentDescription = "",
+                            modifier = Modifier.size(190.dp)
+                        )
+                    }else {
+                        Image(
+                            painter = rememberAsyncImagePainter(profilePic),
+                            contentDescription = "",
+                            modifier = Modifier
+                                .padding(10.dp)
+                                .clip(RoundedCornerShape(50))
+                                .size(160.dp)
+                        )
+                    }
                     Image(painter = circleImg, contentDescription = "", modifier = Modifier
                         .padding(start = 125.dp, top = 128.dp)
                         .size(50.dp))
@@ -77,7 +99,7 @@ fun profileSettingsPage() {
             Box {
                 Column(Modifier.fillMaxWidth()) {
                     Text(text = "Name",  color = Color(0xFF818584))
-                    Text(text = "User",
+                    Text(text = myName ?: "",
                         fontSize = 15.sp,)
                     Text(
                         text = "This is not your username or pin, This name will be visible to your Whatsapp contacts.",
@@ -139,7 +161,7 @@ fun profileSettingsPage() {
             Column(Modifier.fillMaxWidth()) {
                 Text(text = "Phone")
                 Text(
-                    text = "+91 7034369507",
+                    text = number!!,
                     fontSize = 15.sp
                 )
             }
