@@ -15,7 +15,7 @@ fun settingsNavGraph(navHostController: NavHostController, viewModel: firestoreV
         startDestination = settingsScreen.mainSetting.route )
     {
         composable(route = settingsScreen.mainSetting.route) {
-            MainSettings(navHostController = navHostController)
+            MainSettings(navHostController = navHostController, viewModel)
         }
         composable(route = settingsScreen.profileSetting.route) {
             profileSettingsPage(viewModel)

@@ -5,13 +5,18 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.BlendMode.Companion.Screen
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -20,17 +25,24 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.navOptions
+import coil.compose.rememberAsyncImagePainter
 import com.example.whatsapp_clone.R
 import com.example.whatsapp_clone.data.optionFormat
 import com.example.whatsapp_clone.settingNavigation.settingsScreen
+import com.example.whatsapp_clone.viewmodel.firestoreViewModel
+import com.google.firebase.auth.FirebaseAuth
 
 @Composable
-fun MainSettings(navHostController: NavHostController) {
+fun MainSettings(navHostController: NavHostController, viewModel: firestoreViewModel) {
     val backArrowImg = painterResource(id = R.drawable.arrow_back)
     val userIcon = painterResource(id = R.drawable.circle_img)
     val barCodeImg = painterResource(id = R.drawable.qrcode_img)
     var metaImg = painterResource(id = R.drawable.meta_img)
-
+    val context = LocalContext.current
+    val number = FirebaseAuth.getInstance().currentUser?.phoneNumber
+    viewModel.getMyName()
+    val myName by viewModel.myName.observeAsState()
+    val profilePic = viewModel.loadImageBitmap(context,number!!,"jpeg")
     val optionList = listOf(
          optionFormat(icon = painterResource(id = R.drawable.key_img), name = "Account", discription = "Privacy,security,change number", navigation = settingsScreen.accountSetting.route),
         optionFormat(icon = painterResource(id = R.drawable.chat_img), name = "Chats", discription = "Theme,wallpapers,chat history", navigation = settingsScreen.chatSetting.route),
@@ -60,14 +72,25 @@ fun MainSettings(navHostController: NavHostController) {
             .clickable { navHostController.navigate(settingsScreen.profileSetting.route) },
             verticalAlignment = Alignment.CenterVertically, ) {
             Spacer(modifier = Modifier.width(10.dp))
-            Image(
-                painter = userIcon,
-                contentDescription = "user profile photo",
-                modifier = Modifier.size(80.dp)
-            )
+            if (profilePic == null) {
+                Image(
+                    painter = userIcon,
+                    contentDescription = "user profile photo",
+                    modifier = Modifier.size(80.dp)
+                )
+            }else {
+                Image(
+                    painter = rememberAsyncImagePainter(profilePic),
+                    contentDescription = "",
+                    modifier = Modifier
+                        .padding(5.dp)
+                        .clip(RoundedCornerShape(50))
+                        .size(60.dp)
+                )
+            }
             Spacer(modifier = Modifier.width(10.dp))
             Column(Modifier.weight(0.5f)) {
-                Text(text = "User", fontSize = 20.sp)
+                Text(text = myName ?: "User", fontSize = 20.sp)
                 Text(text = "Hey there! I a using Whatsapp.", color = Color(0xFF818584))
             }
             Image(painter = barCodeImg, contentDescription = "", Modifier.size(28.dp))
