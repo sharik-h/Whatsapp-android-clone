@@ -1,31 +1,32 @@
 package com.example.whatsapp_clone.settingsPages
 
+import android.graphics.Bitmap
+import android.net.Uri
+import android.provider.MediaStore
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.result.launch
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Divider
-import androidx.compose.material.TopAppBar
+import androidx.compose.material.*
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.InspectableModifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import com.example.whatsapp_clone.R
 import com.example.whatsapp_clone.viewmodel.firestoreViewModel
 import com.google.firebase.auth.FirebaseAuth
+import java.io.ByteArrayOutputStream
 
 @Composable
 fun profileSettingsPage(viewModel: firestoreViewModel) {
@@ -42,6 +43,23 @@ fun profileSettingsPage(viewModel: firestoreViewModel) {
     viewModel.getMyName()
     val myName by viewModel.myName.observeAsState()
     val profilePic = viewModel.loadImageBitmap(context,number!!,"jpeg")
+    var expanded by remember { mutableStateOf(false) }
+    var imageUri by remember { mutableStateOf<Uri?>(null) }
+    var bitmap by remember { mutableStateOf<Uri?>(null) }
+    val glauncher = rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri: Uri? ->
+        imageUri = uri
+        bitmap = null
+        viewModel.updateProfilePic(imageUri , context)
+    }
+    val clauncher = rememberLauncherForActivityResult(ActivityResultContracts.TakePicturePreview()) {
+        val bytes = ByteArrayOutputStream()
+        it.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
+        val path = MediaStore.Images.Media.insertImage(context.contentResolver, it, "Title", null)
+        bitmap = Uri.parse(path.toString())
+        imageUri = null
+        viewModel.updateProfilePic(bitmap, context)
+    }
+
     Column(modifier = Modifier.fillMaxSize()) {
 
         TopAppBar(elevation = 0.dp, backgroundColor = Color(0xFF008268)) {
@@ -55,7 +73,6 @@ fun profileSettingsPage(viewModel: firestoreViewModel) {
         Row(modifier = Modifier
             .fillMaxWidth()
             .padding(top = 10.dp, bottom = 15.dp), horizontalArrangement = Arrangement.Center ) {
-            IconButton(onClick = { /*TODO*/ }){
                 Box {
                     if (profilePic == null) {
                         Image(
@@ -73,12 +90,41 @@ fun profileSettingsPage(viewModel: firestoreViewModel) {
                                 .size(160.dp)
                         )
                     }
-                    Image(painter = circleImg, contentDescription = "", modifier = Modifier
-                        .padding(start = 125.dp, top = 128.dp)
-                        .size(50.dp))
-                    Image(painter = cameraImg, contentDescription = "", modifier = Modifier
-                        .padding(start = 139.dp, top = 142.dp)
-                        .size(22.dp))
+                    IconButton(onClick = { expanded = true },){
+                        Image(painter = circleImg, contentDescription = "", modifier = Modifier
+                            .padding(start = 125.dp, top = 128.dp)
+                            .size(50.dp))
+                        Image(painter = cameraImg, contentDescription = "", modifier = Modifier
+                            .padding(start = 125.dp, top = 130.dp)
+                            .size(22.dp))
+                        DropdownMenu(
+                            expanded = expanded,
+                            onDismissRequest = { expanded = false },
+                            modifier = Modifier.width(95.dp),
+                        ) {
+                            TextButton(
+                                onClick = {
+                                    clauncher.launch()
+                                    expanded = false
+                                },
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .fillMaxHeight()
+                            ) {
+                                Text(text = "Camera")
+                            }
+                            TextButton(
+                                onClick = {
+                                    glauncher.launch("image/*")
+                                    expanded = false
+                                },
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .fillMaxHeight()
+                            ) {
+                                Text(text = "Gallery")
+                            }
+                        }
                 }
             }
         }

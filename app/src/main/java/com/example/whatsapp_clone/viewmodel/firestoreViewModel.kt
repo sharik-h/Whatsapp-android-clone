@@ -6,6 +6,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.ImageDecoder
+import android.net.Uri
 import android.util.Log
 import androidx.core.net.toUri
 import androidx.lifecycle.MutableLiveData
@@ -60,6 +61,25 @@ class firestoreViewModel: ViewModel() {
             storageref
                 .child("phone/$Phone")
                 .putFile(uri.toUri())
+        }
+    }
+
+    fun updateProfilePic(uri: Uri?, context:Context) {
+        storageref
+            .child("phone/$myPhone")
+            .putFile(uri!!)
+        var name1 = myPhone
+        name1 = "$myPhone.jpeg"
+        val contentResolver: ContentResolver = context.contentResolver
+        val source: ImageDecoder.Source = ImageDecoder.createSource(contentResolver, uri)
+        var bitmap = ImageDecoder.decodeBitmap(source)
+        val fileOutputStream: FileOutputStream
+        try {
+            fileOutputStream = context.openFileOutput(name1, Context.MODE_PRIVATE)
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 90, fileOutputStream)
+            fileOutputStream.close()
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 
