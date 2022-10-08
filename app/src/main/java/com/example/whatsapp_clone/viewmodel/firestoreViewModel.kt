@@ -83,6 +83,11 @@ class firestoreViewModel: ViewModel() {
         }
     }
 
+    fun updateMyName(newName: String?) {
+        database.document("users/$myPhone")
+            .update("name", newName)
+    }
+
     fun getMyName() {
        database
             .document("users/$myPhone")

@@ -7,6 +7,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.result.launch
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -20,6 +21,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
@@ -46,6 +49,8 @@ fun profileSettingsPage(viewModel: firestoreViewModel) {
     var expanded by remember { mutableStateOf(false) }
     var imageUri by remember { mutableStateOf<Uri?>(null) }
     var bitmap by remember { mutableStateOf<Uri?>(null) }
+    var newName by remember { mutableStateOf(myName) }
+    var showAlert by remember { mutableStateOf(false) }
     val glauncher = rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri: Uri? ->
         imageUri = uri
         bitmap = null
@@ -132,6 +137,7 @@ fun profileSettingsPage(viewModel: firestoreViewModel) {
             modifier = Modifier
                 .fillMaxWidth()
                 .height(75.dp)
+                .clickable { showAlert = true }
                 .padding(horizontal = 20.dp)
         ) {
             Image(
@@ -159,6 +165,41 @@ fun profileSettingsPage(viewModel: firestoreViewModel) {
                     alignment = Alignment.TopEnd
                 )
             }
+            if (showAlert){
+            AlertDialog(
+                onDismissRequest = { showAlert = false },
+                confirmButton = {
+                    TextButton(onClick = {
+                        showAlert = false
+                        viewModel.updateMyName(newName)
+                    }) {
+                        Text(text = "Ok", color = Color.Black)
+                    }
+                },
+                dismissButton = {
+                    TextButton(onClick = { showAlert = false }) {
+                        Text(text = "Cancel", color = Color.Black)
+                    }
+                },
+                title = {
+                    Text(
+                        text = "Enter the name",
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 22.sp
+                    )
+                },
+                text = {
+                    TextField(
+                        value = newName ?: "",
+                        onValueChange = { newName = it },
+                        colors = TextFieldDefaults.textFieldColors(
+                            backgroundColor = Color.Transparent,
+                            focusedIndicatorColor = Color(0xFF008268)),
+                        textStyle = TextStyle(fontSize = 20.sp),
+                    )
+                }
+            )
+        }
         }
         Divider(thickness = 0.5.dp, modifier = Modifier.padding(start = 73.dp, top = 10.dp))
         Row(
