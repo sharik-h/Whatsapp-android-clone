@@ -6,10 +6,10 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.whatsapp_clone.settingsPages.*
-import com.example.whatsapp_clone.viewmodel.firestoreViewModel
+import com.example.whatsapp_clone.viewmodel.FirestoreViewModel
 
 @Composable
-fun settingsNavGraph(navHostController: NavHostController, viewModel: firestoreViewModel) {
+fun settingsNavGraph(navHostController: NavHostController, viewModel: FirestoreViewModel) {
     NavHost(
         navController = navHostController,
         startDestination = settingsScreen.mainSetting.route )

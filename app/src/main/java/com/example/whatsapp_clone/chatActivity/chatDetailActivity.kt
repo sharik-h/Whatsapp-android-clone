@@ -5,7 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import com.example.whatsapp_clone.newChatActivity.chatDetailsPage
-import com.example.whatsapp_clone.viewmodel.firestoreViewModel
+import com.example.whatsapp_clone.viewmodel.FirestoreViewModel
 
 class chatDetailActivity: ComponentActivity() {
 
@@ -14,7 +14,7 @@ class chatDetailActivity: ComponentActivity() {
         val name = intent.getStringExtra("name")
         val phone = intent.getStringExtra("phone")
         val lstseen = intent.getStringExtra("lstseen")
-        val viewModel: firestoreViewModel by viewModels()
+        val viewModel: FirestoreViewModel by viewModels()
         setContent {
             chatDetailsPage(name!!, phone!!, lstseen, viewModel)
         }

@@ -8,11 +8,11 @@ import androidx.activity.viewModels
 import androidx.core.app.ActivityCompat
 import androidx.navigation.compose.rememberNavController
 import com.example.whatsapp_clone.settingNavigation.settingsNavGraph
-import com.example.whatsapp_clone.viewmodel.firestoreViewModel
+import com.example.whatsapp_clone.viewmodel.FirestoreViewModel
 
 class settingActivity: ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
-        val viewModel: firestoreViewModel by viewModels()
+        val viewModel: FirestoreViewModel by viewModels()
         super.onCreate(savedInstanceState)
         val permissionRequest = ActivityCompat.checkSelfPermission(this,  android.Manifest.permission.READ_CONTACTS)
         val permissionGranted = PackageManager.PERMISSION_GRANTED

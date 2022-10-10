@@ -23,10 +23,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import com.example.whatsapp_clone.R
-import com.example.whatsapp_clone.viewmodel.firestoreViewModel
+import com.example.whatsapp_clone.viewmodel.FirestoreViewModel
 
 @Composable
-fun chatDetailsPage(name: String, phone: String, lstseen: String?, viewModel: firestoreViewModel) {
+fun chatDetailsPage(name: String, phone: String, lstseen: String?, viewModel: FirestoreViewModel) {
     val backImg = painterResource(id = R.drawable.arrow_back_grey)
     val optionImg = painterResource(id = R.drawable.option_grey)
     val userImg = painterResource(id = R.drawable.circle_img)

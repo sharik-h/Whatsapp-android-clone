@@ -29,11 +29,11 @@ import coil.compose.rememberAsyncImagePainter
 import com.example.whatsapp_clone.R
 import com.example.whatsapp_clone.data.optionFormat
 import com.example.whatsapp_clone.settingNavigation.settingsScreen
-import com.example.whatsapp_clone.viewmodel.firestoreViewModel
+import com.example.whatsapp_clone.viewmodel.FirestoreViewModel
 import com.google.firebase.auth.FirebaseAuth
 
 @Composable
-fun MainSettings(navHostController: NavHostController, viewModel: firestoreViewModel) {
+fun MainSettings(navHostController: NavHostController, viewModel: FirestoreViewModel) {
     val backArrowImg = painterResource(id = R.drawable.arrow_back)
     val userIcon = painterResource(id = R.drawable.circle_img)
     val barCodeImg = painterResource(id = R.drawable.qrcode_img)

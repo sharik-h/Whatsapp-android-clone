@@ -33,29 +33,29 @@ import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import com.example.whatsapp_clone.R
 import com.example.whatsapp_clone.chatActivity.attachmentActivity
-import com.example.whatsapp_clone.viewmodel.firestoreViewModel
+import com.example.whatsapp_clone.viewmodel.FirestoreViewModel
 
 class myStatusDetailActivity: ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val viewModel: firestoreViewModel by viewModels()
+        val viewModel: FirestoreViewModel by viewModels()
         setContent {
             statusDetail(viewModel)
         }
     }
 
     @Composable
-    fun statusDetail(viewModel: firestoreViewModel) {
+    fun statusDetail(viewModel: FirestoreViewModel) {
         val context = LocalContext.current
-        viewModel.loadmystatusName()
+        viewModel.loadMyStatusName()
         viewModel.getViewDetails()
 
         val bArrowImg = painterResource(id = R.drawable.arrow_back)
         val cameraImg = painterResource(id = R.drawable.camera_img)
-        val namess by viewModel.loadmystatusName.observeAsState(initial = emptyList())
+        val namess by viewModel.loadMyStatusName.observeAsState(initial = emptyList())
         val viewDetails by viewModel.statusViews.observeAsState()
-        val myStatusImages = viewDetails?.let { viewModel.loadmysttus(context = context, names = namess, viewDetails = it) }
+        val myStatusImages = viewDetails?.let { viewModel.loadMyStatus(context = context, names = namess, viewDetails = it) }
         var imageUri by remember { mutableStateOf<Uri?>(null) }
         val glauncher =
             rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri: Uri? ->
@@ -130,7 +130,7 @@ fun StatusItem(
     views: Int,
     time: String,
     name: String,
-    viewModel: firestoreViewModel,
+    viewModel: FirestoreViewModel,
     id: String
 ){
     val optionImg = painterResource(id = R.drawable.option_vertical_green)

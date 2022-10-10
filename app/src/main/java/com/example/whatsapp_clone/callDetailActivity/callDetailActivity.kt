@@ -26,12 +26,12 @@ import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import com.example.whatsapp_clone.R
 import com.example.whatsapp_clone.chatActivity.chatActivity
-import com.example.whatsapp_clone.viewmodel.firestoreViewModel
+import com.example.whatsapp_clone.viewmodel.FirestoreViewModel
 
 class callDetailActivity: ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val viewModel:firestoreViewModel by viewModels()
+        val viewModel:FirestoreViewModel by viewModels()
         val name = intent.getStringExtra("name")
         val time = intent.getStringExtra("time")
         val phone = intent.getStringExtra("phone")
@@ -41,7 +41,7 @@ class callDetailActivity: ComponentActivity() {
     }
 
     @Composable
-    fun callDetails(name: String, time: String, phone: String, viewModel: firestoreViewModel) {
+    fun callDetails(name: String, time: String, phone: String, viewModel: FirestoreViewModel) {
         Column(Modifier.fillMaxWidth()) {
             val backArrowImg = painterResource(id = R.drawable.arrow_back)
             val chatImg = painterResource(id = R.drawable.chat_img_whilte)

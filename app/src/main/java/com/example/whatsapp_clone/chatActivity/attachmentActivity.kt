@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import com.example.whatsapp_clone.R
-import com.example.whatsapp_clone.viewmodel.firestoreViewModel
+import com.example.whatsapp_clone.viewmodel.FirestoreViewModel
 import java.time.LocalDate
 import java.time.LocalTime
 
@@ -32,7 +32,7 @@ class attachmentActivity: ComponentActivity() {
         val imageUri = intent.getStringExtra("imageUri")
         val name = intent.getStringExtra("name")
         val phone = intent.getStringExtra("phone")
-        val viewModel: firestoreViewModel by viewModels()
+        val viewModel: FirestoreViewModel by viewModels()
         setContent {
             attachmentSelectionPage(imageUri,name,phone,viewModel)
         }
@@ -44,7 +44,7 @@ class attachmentActivity: ComponentActivity() {
         imageUri: String?,
         name: String?,
         phone: String?,
-        viewModel: firestoreViewModel
+        viewModel: FirestoreViewModel
     ) {
         if (phone != null) {
             viewModel.unseen(phone)
@@ -146,7 +146,6 @@ class attachmentActivity: ComponentActivity() {
                             val currentTime = LocalTime.now().toString()
                             val name = "$phone$currentTime"
                             viewModel.sendStatus(
-                                name =name,
                                 image = imageUri!!,
                                 context = context,
                                 extension = "jpeg"

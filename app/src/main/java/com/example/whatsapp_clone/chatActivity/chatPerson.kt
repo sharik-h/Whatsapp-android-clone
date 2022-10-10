@@ -24,12 +24,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import com.example.whatsapp_clone.R
-import com.example.whatsapp_clone.viewmodel.firestoreViewModel
+import com.example.whatsapp_clone.viewmodel.FirestoreViewModel
 import java.time.LocalDate
 
 
 @Composable
-fun chatPerson( name: String, phone: String, msgdate: String?, viewModel: firestoreViewModel) {
+fun chatPerson( name: String, phone: String, msgdate: String?, viewModel: FirestoreViewModel) {
 
     viewModel.loadChat(phone = phone)
     viewModel.unseen(phone)

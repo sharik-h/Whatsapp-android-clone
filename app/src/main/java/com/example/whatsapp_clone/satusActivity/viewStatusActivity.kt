@@ -25,7 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import com.example.whatsapp_clone.R
-import com.example.whatsapp_clone.viewmodel.firestoreViewModel
+import com.example.whatsapp_clone.viewmodel.FirestoreViewModel
 import java.util.*
 import kotlin.concurrent.timerTask
 
@@ -36,7 +36,7 @@ class viewStatusActivity: ComponentActivity() {
         val name = intent.getStringExtra("name")
         val time = intent.getStringExtra("time")
         val statusNames = intent.getStringArrayExtra("statusNames")
-        val viewModel: firestoreViewModel by viewModels()
+        val viewModel: FirestoreViewModel by viewModels()
         if (statusNames.isNullOrEmpty()) {
             viewModel.loadMyStatus(this)
         }
@@ -49,7 +49,7 @@ class viewStatusActivity: ComponentActivity() {
     private fun statusViewPage(
         name: String,
         time: String?,
-        viewModel: firestoreViewModel,
+        viewModel: FirestoreViewModel,
         statusNames: Array<String>?
     ) {
         val backArrowImg = painterResource(id = R.drawable.arrow_back)

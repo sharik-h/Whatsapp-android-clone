@@ -25,7 +25,7 @@ import com.example.whatsapp_clone.mainPage.callPage
 import com.example.whatsapp_clone.mainPage.chatPage
 import com.example.whatsapp_clone.mainPage.statusPage
 import com.example.whatsapp_clone.ui.theme.Whatsapp_cloneTheme
-import com.example.whatsapp_clone.viewmodel.firestoreViewModel
+import com.example.whatsapp_clone.viewmodel.FirestoreViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.pagerTabIndicatorOffset
@@ -36,7 +36,7 @@ import kotlinx.coroutines.launch
 class MainActivity : ComponentActivity() {
 
     val currentuser = FirebaseAuth.getInstance().currentUser
-    val viewModel: firestoreViewModel by viewModels()
+    val viewModel: FirestoreViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

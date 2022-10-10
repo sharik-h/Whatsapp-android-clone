@@ -15,10 +15,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.whatsapp_clone.R
 import com.example.whatsapp_clone.modelItems.callLogModel
-import com.example.whatsapp_clone.viewmodel.firestoreViewModel
+import com.example.whatsapp_clone.viewmodel.FirestoreViewModel
 
 @Composable
-fun callPage(viewModel: firestoreViewModel) {
+fun callPage(viewModel: FirestoreViewModel) {
 
     viewModel.loadCallLog()
     val addCallImg = painterResource(id = R.drawable.add_call)

@@ -27,12 +27,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import com.example.whatsapp_clone.R
-import com.example.whatsapp_clone.viewmodel.firestoreViewModel
+import com.example.whatsapp_clone.viewmodel.FirestoreViewModel
 import com.google.firebase.auth.FirebaseAuth
 import java.io.ByteArrayOutputStream
 
 @Composable
-fun profileSettingsPage(viewModel: firestoreViewModel) {
+fun profileSettingsPage(viewModel: FirestoreViewModel) {
     val backArrowImg = painterResource(id = R.drawable.arrow_back)
     val roundedUserImg = painterResource(id = R.drawable.circle_img)
     val userImg = painterResource(id = R.drawable.person_img)

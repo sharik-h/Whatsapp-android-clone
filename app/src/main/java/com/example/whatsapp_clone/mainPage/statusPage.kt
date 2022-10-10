@@ -30,10 +30,10 @@ import com.example.whatsapp_clone.R
 import com.example.whatsapp_clone.chatActivity.attachmentActivity
 import com.example.whatsapp_clone.satusActivity.myStatusDetailActivity
 import com.example.whatsapp_clone.satusActivity.viewStatusActivity
-import com.example.whatsapp_clone.viewmodel.firestoreViewModel
+import com.example.whatsapp_clone.viewmodel.FirestoreViewModel
 
 @Composable
-fun statusPage(viewModel: firestoreViewModel) {
+fun statusPage(viewModel: FirestoreViewModel) {
     Column(Modifier.fillMaxSize()) {
         val userImg = painterResource(id = R.drawable.circle_img)
         val addImg = painterResource(id = R.drawable.add_circle)

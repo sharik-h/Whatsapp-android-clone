@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import com.example.whatsapp_clone.R
 import com.example.whatsapp_clone.callDetailActivity.callDetailActivity
-import com.example.whatsapp_clone.viewmodel.firestoreViewModel
+import com.example.whatsapp_clone.viewmodel.FirestoreViewModel
 
 
 @Composable
@@ -28,7 +28,7 @@ fun callLogModel(
     Name: String,
     time: String,
     type: String,
-    viewModel: firestoreViewModel,
+    viewModel: FirestoreViewModel,
     phone: String?
 ) {
     val userImg = painterResource(id = R.drawable.circle_img)

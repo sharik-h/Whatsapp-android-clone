@@ -26,12 +26,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.whatsapp_clone.R
 import com.example.whatsapp_clone.chatActivity.chatActivity
-import com.example.whatsapp_clone.viewmodel.firestoreViewModel
+import com.example.whatsapp_clone.viewmodel.FirestoreViewModel
 
 
 class newChatActivity(): ComponentActivity() {
 
-    val viewmodel : firestoreViewModel by viewModels()
+    val viewmodel : FirestoreViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
