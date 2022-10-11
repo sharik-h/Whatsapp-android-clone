@@ -1,9 +1,12 @@
 package com.example.whatsapp_clone.chatActivity
 
 import android.content.Intent
+import android.graphics.Bitmap
 import android.net.Uri
+import android.provider.MediaStore
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.result.launch
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -22,6 +25,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import java.io.ByteArrayOutputStream
 import coil.compose.rememberAsyncImagePainter
 import com.example.whatsapp_clone.R
 import com.example.whatsapp_clone.viewmodel.FirestoreViewModel
@@ -57,6 +61,7 @@ fun chatPerson( name: String, phone: String, msgdate: String?, viewModel: Firest
     var tempDate = msgdate
     var message by remember { mutableStateOf("") }
     var expanded by remember { mutableStateOf(false) }
+    var showAlert by remember { mutableStateOf(false) }
     val chats by viewModel.chats.observeAsState(initial = emptyList())
     val unSeen by viewModel.unSeen.observeAsState()
     val context = LocalContext.current
@@ -64,14 +69,31 @@ fun chatPerson( name: String, phone: String, msgdate: String?, viewModel: Firest
     phone_intent.data = Uri.parse("tel:$phone")
     var profileImg = viewModel.loadImageBitmap(context, phone, "jpeg")
     var imageUri by remember { mutableStateOf<Uri?>(null) }
-    val launcher = rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri: Uri? ->
+    val glauncher = rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri: Uri? ->
         imageUri = uri
         context.startActivity(Intent(context, attachmentActivity::class.java)
             .putExtra("imageUri",imageUri.toString())
             .putExtra("name", name)
             .putExtra("phone", phone))
     }
-
+    var bitmap by remember { mutableStateOf<Uri?>(null) }
+    val clauncher = rememberLauncherForActivityResult(contract = ActivityResultContracts.TakePicturePreview()) {
+        val bytes = ByteArrayOutputStream()
+        it.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
+        val path = MediaStore.Images.Media.insertImage(context.contentResolver, it, "Title", null)
+        bitmap = Uri.parse(path.toString())
+        imageUri = null
+        context.startActivity(Intent(context, attachmentActivity::class.java)
+            .putExtra("imageUri",bitmap.toString())
+            .putExtra("name", name)
+            .putExtra("phone", phone))
+    }
+    val dlauncher = rememberLauncherForActivityResult(contract = ActivityResultContracts.PickContact() ) {
+        showAlert = true
+    }
+    val doclauncher = rememberLauncherForActivityResult(contract = ActivityResultContracts.OpenDocument()) {
+        showAlert = true
+    }
 
     Column(Modifier.fillMaxSize()) {
                 Image(painter = chatBgImg, contentDescription = "", modifier = Modifier.fillMaxSize())
@@ -330,19 +352,61 @@ fun chatPerson( name: String, phone: String, msgdate: String?, viewModel: Firest
                         onDismissRequest = { expanded = false }
                     ) {
                         Row(Modifier.padding(horizontal = 25.dp, vertical = 15.dp)) {
-                            buttonSample(icon = documentImg, name = "Document", color = 0xFF9060FF, use =  "" )
-                            buttonSample(icon = cameraWhiteImg, name = "Camera", color = 0xFFF35C7C, use = "")
-                            buttonSample(icon = galleryImg, name = "Gallery", color = 0xFFA145DB, use = "")
+                            buttonSample(
+                                icon = documentImg,
+                                name = "Document",
+                                color = 0xFF9060FF,
+                                onClick = {
+                                    doclauncher.launch(arrayOf("application/pdf", "application/doc"))
+                                    expanded = false
+                                } )
+                            buttonSample(
+                                icon = cameraWhiteImg,
+                                name = "Camera",
+                                color = 0xFFF35C7C,
+                                onClick = {
+                                    clauncher.launch()
+                                    expanded = false
+                                })
+                            buttonSample(
+                                icon = galleryImg,
+                                name = "Gallery",
+                                color = 0xFFA145DB,
+                                onClick = {
+                                    expanded = false
+                                    glauncher.launch("*/*")
+                                })
                         }
                         Row(Modifier.padding(horizontal = 25.dp, vertical = 5.dp)) {
-                            buttonSample(icon = audioImg, name = "Audio", color = 0xFFF07B55, use = "")
-                            buttonSample(icon = locationImg, name = "Location", color = 0xFF3DB86F, use ="")
-                            buttonSample(icon = contactImg, name = "Contact", color = 0xFF096097, use ="")
+                            buttonSample(
+                                icon = audioImg,
+                                name = "Audio",
+                                color = 0xFFF07B55,
+                                onClick = {
+                                    expanded = false
+                                    showAlert = true
+                                })
+                            buttonSample(
+                                icon = locationImg,
+                                name = "Location",
+                                color = 0xFF3DB86F,
+                                onClick = {
+                                    expanded = false
+                                    showAlert = true
+                                })
+                            buttonSample(
+                                icon = contactImg,
+                                name = "Contact",
+                                color = 0xFF096097,
+                                onClick = {
+                                    expanded = false
+                                    dlauncher.launch()
+                                })
                         }
                     }
                 }
                     if (message == "") {
-                        IconButton(onClick = { /*TODO*/ }) {
+                        IconButton(onClick = { clauncher.launch() }) {
                             Image(painter = cameraImg, contentDescription = "")
                         }
                     }
@@ -382,6 +446,18 @@ fun chatPerson( name: String, phone: String, msgdate: String?, viewModel: Firest
 
             }
         }
+    if (showAlert) {
+        AlertDialog(
+            onDismissRequest = { showAlert = false },
+            confirmButton = {
+                TextButton(onClick = { showAlert = false }) {
+                    Text(text = "Ok", color = Color.Black)
+                }
+            },
+            title = { Text(text = "Sorry 😢😢", fontWeight = FontWeight.SemiBold, fontSize = 22.sp) },
+            text = { Text(text = "This option is not yet supported by this application.") }
+        )
+    }
 }
 
 @Composable
@@ -389,32 +465,24 @@ fun buttonSample(
     icon: Painter,
     name: String,
     color: Long,
-    use: String
+    onClick: () -> Unit
 ) {
-    val context = LocalContext.current
-    var imageUri by remember { mutableStateOf<Uri?>(null) }
-    val launcher = rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri: Uri? ->
-        imageUri = uri
-        context.startActivity(Intent(context, attachmentActivity::class.java)
-            .putExtra("imageUri",imageUri.toString())
-            .putExtra("name", name))
-    }
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier
+            .width(100.dp)
+            .height(95.dp)
+    ) {
+        IconButton(
+            onClick = onClick ,
             modifier = Modifier
-                .width(100.dp)
-                .height(95.dp)
-                .clickable { launcher.launch(use) }) {
-            IconButton(
-                onClick = {},
-                modifier = Modifier
-                    .padding(bottom = 10.dp)
-                    .size(55.dp)
-                    .clip(RoundedCornerShape(50))
-                    .background(Color(color))
-            ) {
-                Image(painter = icon, contentDescription = "")
-            }
-            Text(text = name)
+                .padding(bottom = 10.dp)
+                .size(55.dp)
+                .clip(RoundedCornerShape(50))
+                .background(Color(color))
+        ) {
+            Image(painter = icon, contentDescription = "")
         }
+        Text(text = name)
+    }
 }
