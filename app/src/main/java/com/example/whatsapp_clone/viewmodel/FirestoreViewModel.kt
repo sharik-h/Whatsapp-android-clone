@@ -47,6 +47,9 @@ class FirestoreViewModel: ViewModel() {
     val loadMyStatusName: MutableLiveData<List<String>> = MutableLiveData<List<String>>()
     var statusViews: MutableLiveData<MutableMap<String,Int>> = MutableLiveData<MutableMap<String, Int>>()
 
+    /**
+     * Adds New User details into firebase firestore and store user image into firebase storage
+     */
     fun addNewUser(
         uid: String,
         uri: String?,
@@ -64,6 +67,9 @@ class FirestoreViewModel: ViewModel() {
         }
     }
 
+    /**
+     * Updates user profile picture stored in the firebase storage
+     */
     fun updateProfilePic(uri: Uri?, context:Context) {
         storageRef
             .child("phone/$myPhone")
@@ -83,11 +89,17 @@ class FirestoreViewModel: ViewModel() {
         }
     }
 
+    /**
+     *  Updates user name stored in firebase firestore
+     */
     fun updateMyName(newName: String?) {
         database.document("users/$myPhone")
             .update("name", newName)
     }
 
+    /**
+     *  Fetches current user name from the firestore
+     */
     fun getMyName() {
        database
             .document("users/$myPhone")
@@ -98,6 +110,9 @@ class FirestoreViewModel: ViewModel() {
             }
     }
 
+    /**
+     *  Fetches all the available chat for a this user
+     */
     fun getData(context: Context): MutableList<detailFormat> {
         val activeChats : MutableList<detailFormat> = mutableListOf()
         database
@@ -129,6 +144,9 @@ class FirestoreViewModel: ViewModel() {
         return activeChats
     }
 
+    /**
+     *  Fetches all the Users that have registered to this application
+     */
     fun getAllUsers() {
         val allUsers: MutableList<String> = mutableListOf()
          database.collection("users")
@@ -142,6 +160,9 @@ class FirestoreViewModel: ViewModel() {
              }
     }
 
+    /**
+     *  Adds the selected person as a new chat to the current user
+     */
     private fun addNewChat(name:String, number: String) {
         database
             .document("whatsappclone/chats/$currentUser/$number")
@@ -150,6 +171,9 @@ class FirestoreViewModel: ViewModel() {
             .set(mapOf(myPhone to 0))
     }
 
+    /**
+     *  Checks weather a particular chat is already present or not
+     */
     fun isUserPresent(name:String ,number: String) {
        database
            .document("whatsappclone/chats/$currentUser/$number")
@@ -162,6 +186,10 @@ class FirestoreViewModel: ViewModel() {
 
     }
 
+    /**
+     *  Sends or Saves the user message to the both sender and receiver database,
+     *  updates the unseen message, and also changes the last message sent value
+     */
     fun sendMessage(phone: String, message: String, unSeen: Int, messageType: Int) {
         val currentTime = LocalTime.now().toString()
         val currentDate = LocalDate.now().toString()
@@ -179,6 +207,9 @@ class FirestoreViewModel: ViewModel() {
             .update(mapOf(myPhone to unSeen+1))
     }
 
+    /**
+     *  Fetches all the data from a particular chat and updates the unseen messages to zero
+     */
     fun loadChat(phone: String) {
         database
             .collection("chats/$myPhone/$phone")
@@ -199,6 +230,9 @@ class FirestoreViewModel: ViewModel() {
             .update(mapOf(phone to 0))
     }
 
+    /**
+     *  Fetches the unseen message of a particular person
+     */
     fun unseen(phone: String) {
     var value1 = 0
     database.document("chats/$phone")
@@ -213,6 +247,9 @@ class FirestoreViewModel: ViewModel() {
         }
 }
 
+    /**
+     *  Fetches the number of all unseen message from all available chats
+     */
     fun myNotifications() {
         database.document("chats/$myPhone")
             .addSnapshotListener { value, _ ->
@@ -231,6 +268,10 @@ class FirestoreViewModel: ViewModel() {
             }
     }
 
+    /**
+     *  Save the Last call made detail to firebase firestore database,
+     *  and update the last message as voice call for both caller and receiver
+     */
     fun addToCallLog(name: String, phone: String) {
         val currentTime = LocalTime.now().toString()
         val currentDate = LocalDate.now().toString()
@@ -258,6 +299,9 @@ class FirestoreViewModel: ViewModel() {
             .update(mapOf("lastmsg" to "voice call", "msgdate" to currentDate))
     }
 
+    /**
+     *  Fetches all the call log detail for the current user.
+     */
     fun loadCallLog() {
         database.collection("callLogs/calls/$myPhone")
             .orderBy("dateTime",Query.Direction.DESCENDING)
@@ -279,6 +323,10 @@ class FirestoreViewModel: ViewModel() {
             }
     }
 
+    /**
+     *  Saves the Image send to firebase storage to both sender and reciever database,
+     *  and save it locally on sender device separately
+     */
     fun sendImage(image: String, name: String, phone: String, extension: String, context: Context) {
         storageRef
             .child("chats/$myPhone/$name")
@@ -300,6 +348,9 @@ class FirestoreViewModel: ViewModel() {
         }
     }
 
+    /**
+     *  Fetches an image from the firebase storage database and stores it locally on user device
+     */
     fun saveImage(context: Context, name1: String, extension: String) {
         storageRef
             .child("phone/$name1")
@@ -319,6 +370,9 @@ class FirestoreViewModel: ViewModel() {
             }
     }
 
+    /**
+     *  Fetches the image stored the device locally
+     */
     fun loadImageBitmap(context: Context, name1: String, extension: String): Bitmap? {
         val name = "$name1.$extension"
         val fileInputStream : FileInputStream
@@ -334,6 +388,10 @@ class FirestoreViewModel: ViewModel() {
         return bitmap
     }
 
+    /**
+     *  Saves the status images locally, save the image into sender and reciever firebase storage database,
+     *  and updates the reciver that a new status has been added
+     */
     fun sendStatus(image: String, context: Context, extension: String) {
         val currentTime = LocalTime.now().toString()
         val name = "$myPhone$currentTime"
@@ -368,6 +426,10 @@ class FirestoreViewModel: ViewModel() {
             }
     }
 
+    /**
+     *  Fetches the name of all my status image and loads all of the
+     *  current user status images that is stored locally
+     */
     fun loadMyStatus(context: Context): MutableList<Bitmap> {
         val bitmapList = mutableListOf<Bitmap>()
         database.document("status names/$myPhone")
@@ -399,6 +461,9 @@ class FirestoreViewModel: ViewModel() {
         return bitmapList
     }
 
+    /**
+     *  Fetches all the names of users with status from the firebase firestore
+     */
     fun allStatusUsers() {
         database.document("status/$myPhone")
             .get()
@@ -411,6 +476,9 @@ class FirestoreViewModel: ViewModel() {
             }
     }
 
+    /**
+     *  Fetches the names of status images for each user as a list from the firebase firestore
+     */
     fun getAllStatusNames(allStatusUser: Map<String, Boolean>) {
         database.collection("status names")
             .addSnapshotListener{ value, _ ->
@@ -437,6 +505,9 @@ class FirestoreViewModel: ViewModel() {
     }
 
 
+    /**
+     * Fetches and Saves a particular status image from the firebase storage
+     */
     private fun saveStatus(phone: String, name: String, context: Context) {
         storageRef.child("status/$phone/$name")
             .getBytes(Long.MAX_VALUE)
@@ -456,6 +527,9 @@ class FirestoreViewModel: ViewModel() {
     }
 
 
+    /**
+     *  Loads all the every users status
+     */
     fun loadAllStatus(allStatusList: List<statusListFormat>, context: Context) {
         val eachStatusFormat = mutableListOf<statusFormat>()
         allStatusList.forEach { docs ->
@@ -488,6 +562,9 @@ class FirestoreViewModel: ViewModel() {
         }
     }
 
+    /**
+     *  Returns all the list of image required
+     */
     fun loadStatusImages(context: Context, statusNames: Array<String>?): List<Bitmap> {
         val statusDocs = mutableListOf<Bitmap>()
         statusNames?.forEach { doc ->
@@ -506,11 +583,17 @@ class FirestoreViewModel: ViewModel() {
         return statusDocs
     }
 
+    /**
+     *  Updates that a particular status has been viewed by setting its value to false
+     */
     fun statusViewed(name: String) {
         database.document("status/$myPhone")
             .update(mapOf(name to false))
     }
 
+    /**
+     *  Increments the number of view for a stutus when we each particular status image
+     */
     fun updateView(phone: String, name: String) {
         database.document("statusViews/$phone")
             .get()
@@ -525,6 +608,9 @@ class FirestoreViewModel: ViewModel() {
             }
     }
 
+    /**
+     *  Delete a image from the firebase as well as from the local machine
+     */
     fun deleteStatus(name: String, context: Context) {
         database.document("status names/$myPhone")
             .update(mapOf(name to FieldValue.delete()))
@@ -538,6 +624,9 @@ class FirestoreViewModel: ViewModel() {
         }
     }
 
+    /**
+     *  Fetches the current user status image names
+     */
     fun loadMyStatusName() {
         database.document("status names/$myPhone")
             .get()
@@ -550,6 +639,9 @@ class FirestoreViewModel: ViewModel() {
             }
     }
 
+    /**
+     *  Fetches the number of views for each status image
+     */
     fun getViewDetails() {
         database.document("statusViews/$myPhone")
             .get()
@@ -562,6 +654,9 @@ class FirestoreViewModel: ViewModel() {
             }
     }
 
+    /**
+     *  Returns all of the current user images in a particular format
+     */
     fun loadMyStatus(names: List<String>, viewDetails: MutableMap<String, Int>, context: Context): MutableList<myStatusFormat> {
         val loadMyStatus = mutableListOf<myStatusFormat>()
         names.forEach { eachName ->
