@@ -1,24 +1,20 @@
 package com.example.whatsapp_clone.newChatActivity
 
 import androidx.compose.foundation.*
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.material.SnackbarDefaults.backgroundColor
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.geometry.RoundRect
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
@@ -93,66 +89,14 @@ fun chatDetailsPage(name: String, phone: String, lstseen: String?, viewModel: Fi
                 }
 
                 Spacer(modifier = Modifier.height(20.dp))
-                Row() {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Image(
-                            painter = phoneImg,
-                            contentDescription = "",
-                            modifier = Modifier.size(30.dp)
-                        )
-                        Spacer(modifier = Modifier.height(12.dp))
-                        Text(
-                            text = "Audio",
-                            color = Color(0xFF00A584),
-                            fontSize = 15.sp,
-                            fontWeight = FontWeight.SemiBold
-                        )
-                    }
+                Row {
+                    basicOptionModel(image = phoneImg, name = "Audio")
                     Spacer(modifier = Modifier.width(38.dp))
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Image(
-                            painter = cameraImg,
-                            contentDescription = "",
-                            modifier = Modifier.size(30.dp)
-                        )
-                        Spacer(modifier = Modifier.height(12.dp))
-                        Text(
-                            text = "Video",
-                            color = Color(0xFF00A584),
-                            fontSize = 15.sp,
-                            fontWeight = FontWeight.SemiBold
-                        )
-                    }
+                    basicOptionModel(image = cameraImg, name = "Video")
                     Spacer(modifier = Modifier.width(38.dp))
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Image(
-                            painter = searchImg,
-                            contentDescription = "",
-                            modifier = Modifier.size(30.dp)
-                        )
-                        Spacer(modifier = Modifier.height(12.dp))
-                        Text(
-                            text = "Search",
-                            color = Color(0xFF00A584),
-                            fontSize = 15.sp,
-                            fontWeight = FontWeight.SemiBold
-                        )
-                    }
+                    basicOptionModel(image = searchImg, name = "Search")
                     Spacer(modifier = Modifier.width(38.dp))
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Image(
-                            painter = rupeeImg,
-                            contentDescription = "",
-                            modifier = Modifier.size(30.dp)
-                        )
-                        Spacer(modifier = Modifier.height(12.dp))
-                        Text(
-                            text = " Pay",
-                            color = Color(0xFF00A584),
-                            fontSize = 15.sp,
-                            fontWeight = FontWeight.SemiBold
-                        )
-                    }
+                    basicOptionModel(image = rupeeImg, name = "Pay")
                 }
 
             }
@@ -253,50 +197,45 @@ fun chatDetailsPage(name: String, phone: String, lstseen: String?, viewModel: Fi
                 onDismissRequest = { isDropDown = false},
                 modifier = Modifier.width(195.dp).padding(top = 10.dp, start = 15.dp)
             ) {
-                Text(
-                    text = "Share",
-                    color = Color.Black,
-                    fontSize = 17.sp,
-                    textAlign = TextAlign.Start,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .size(width = 65.dp, height = 42.dp)
-                        .clickable { isDropDown = false }
-                )
-                Text(
-                    text = "Edit",
-                    color = Color.Black,
-                    fontSize = 17.sp,
-                    textAlign = TextAlign.Start,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .size(width = 65.dp, height = 42.dp)
-                        .clickable { isDropDown = false }
-                )
-                Text(
-                    text = "View in address book",
-                    color = Color.Black,
-                    fontSize = 17.sp,
-                    textAlign = TextAlign.Start,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .size(width = 65.dp, height = 42.dp)
-                        .clickable { isDropDown = false }
-                )
-                Text(
-                    text = "Verify security code",
-                    color = Color.Black,
-                    fontSize = 17.sp,
-                    textAlign = TextAlign.Start,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .size(width = 65.dp, height = 42.dp)
-                        .clickable { isDropDown = false }
-                )
+                dropDownOptionModel(Name = "Share")
+                dropDownOptionModel(Name = "Edit")
+                dropDownOptionModel(Name = "View in address book")
+                dropDownOptionModel(Name = "Verify security code")
             }
             Image(painter = optionImg, contentDescription = "")
         }
     }
+}
+
+@Composable
+fun basicOptionModel(image: Painter, name: String) {
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Image(
+            painter = image,
+            contentDescription = "",
+            modifier = Modifier.size(30.dp)
+        )
+        Spacer(modifier = Modifier.height(12.dp))
+        Text(
+            text = name,
+            color = Color(0xFF00A584),
+            fontSize = 15.sp,
+            fontWeight = FontWeight.SemiBold
+        )
+    }
+}
+
+@Composable
+fun dropDownOptionModel(Name: String){
+    Text(
+        text = Name,
+        color = Color.Black,
+        fontSize = 17.sp,
+        textAlign = TextAlign.Start,
+        modifier = Modifier
+            .fillMaxWidth()
+            .size(width = 65.dp, height = 42.dp)
+    )
 }
 
 @Composable
