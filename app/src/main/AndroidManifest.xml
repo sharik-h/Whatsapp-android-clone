@@ -40,6 +40,7 @@
         <activity android:name=".satusActivity.viewStatusActivity"/>
         <activity android:name=".satusActivity.myStatusDetailActivity"/>
         <activity android:name=".callDetailActivity.callDetailActivity"/>
+        <activity android:name=".mainPage.TabActivity"/>
     </application>
 
 </manifest>
