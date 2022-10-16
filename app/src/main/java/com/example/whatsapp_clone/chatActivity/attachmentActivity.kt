@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import com.example.whatsapp_clone.R
+import com.example.whatsapp_clone.ui.theme.green80
 import com.example.whatsapp_clone.viewmodel.FirestoreViewModel
 import java.time.LocalDate
 import java.time.LocalTime
@@ -155,7 +156,7 @@ class attachmentActivity: ComponentActivity() {
                     },
                     Modifier
                         .clip(RoundedCornerShape(50))
-                        .background(Color(0xFF00A584))
+                        .background(green80)
                         .size(45.dp)
                 ) {
                     Image(painter = sendImg, contentDescription = "", modifier = Modifier

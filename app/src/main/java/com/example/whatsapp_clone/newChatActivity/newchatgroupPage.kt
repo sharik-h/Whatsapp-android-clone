@@ -26,6 +26,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.whatsapp_clone.R
 import com.example.whatsapp_clone.chatActivity.chatActivity
+import com.example.whatsapp_clone.ui.theme.green60
+import com.example.whatsapp_clone.ui.theme.grey40
+import com.example.whatsapp_clone.ui.theme.grey60
 import com.example.whatsapp_clone.viewmodel.FirestoreViewModel
 
 
@@ -54,7 +57,7 @@ fun newChatGroupPage() {
     val users = intent.getStringArrayExtra("availableusers")!!.toList()
 
     Column(modifier = Modifier.fillMaxSize()) {
-        TopAppBar(backgroundColor = Color(0xFF008268)) {
+        TopAppBar(backgroundColor = green60) {
             IconButton(onClick = { /*TODO*/ }) {
                 Image(painter = arrowImg, contentDescription = "")
             }
@@ -123,7 +126,7 @@ fun newChatGroupPage() {
             Text(
                 text = "Contacts on WhatsApp",
                 fontWeight = FontWeight.SemiBold,
-                color = Color(0xFF818584),
+                color = grey40,
                 modifier = Modifier.padding(12.dp),
             )
 
@@ -176,7 +179,7 @@ fun newMembers(
         Spacer(modifier = Modifier.width(10.dp))
         Column(Modifier.weight(0.7f)) {
             Text(text = Name, fontSize = 16.sp)
-            Text(text = info, color = Color(0xFF818584))
+            Text(text = info, color = grey60)
         }
     }
 }

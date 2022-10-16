@@ -30,6 +30,7 @@ import com.example.whatsapp_clone.R
 import com.example.whatsapp_clone.chatActivity.attachmentActivity
 import com.example.whatsapp_clone.satusActivity.myStatusDetailActivity
 import com.example.whatsapp_clone.satusActivity.viewStatusActivity
+import com.example.whatsapp_clone.ui.theme.grey40
 import com.example.whatsapp_clone.viewmodel.FirestoreViewModel
 
 @Composable
@@ -109,7 +110,7 @@ fun statusPage(viewModel: FirestoreViewModel) {
                     fontSize = 18.sp,
                     fontWeight = FontWeight.SemiBold
                 )
-                Text(text = "Tap to add status updates", color = Color(0xFF616161))
+                Text(text = "Tap to add status updates", color = grey40)
             }
             Spacer(modifier = Modifier.weight(0.5f))
             if (!myStatus.isEmpty()) {
@@ -138,7 +139,7 @@ fun statusPage(viewModel: FirestoreViewModel) {
                             text = "Recent updates",
                             fontWeight = FontWeight.SemiBold,
                             modifier = Modifier.padding(start = 15.dp),
-                            color = Color(0xFF616161)
+                            color = grey40
                         )
                     }
                     if (eachStatus.viewed == false && vFirst == 0) {
@@ -149,7 +150,7 @@ fun statusPage(viewModel: FirestoreViewModel) {
                         Text(text = "Viewed updates",
                             fontWeight = FontWeight.SemiBold,
                             modifier = Modifier.padding(start = 15.dp),
-                            color = Color(0xFF616161)
+                            color = grey40
                         )
                     }
                    statusModel(
@@ -205,7 +206,7 @@ fun statusModel(
                 fontSize = 18.sp,
                 fontWeight = FontWeight.SemiBold
             )
-            Text(text = time, color = Color(0xFF616161))
+            Text(text = time, color = grey40)
         }
     }
 }

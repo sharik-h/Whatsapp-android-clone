@@ -18,6 +18,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.whatsapp_clone.R
 import com.example.whatsapp_clone.modelItems.chatItemModel
+import com.example.whatsapp_clone.ui.theme.green60
 import com.example.whatsapp_clone.viewmodel.FirestoreViewModel
 
 
@@ -45,7 +46,7 @@ fun chatPage(viewModel: FirestoreViewModel) {
             onClick = { context.startActivity(Intent(context, newChatActivity::class.java).putExtra("availableusers", allusers)) },
             modifier = Modifier.size(57.dp),
             shape = RoundedCornerShape(50),
-            containerColor = Color(0xFF01AA88)
+            containerColor = green60
             ) {
             val chatimg = painterResource(id = R.drawable.chat_img_whilte)
             Image(painter = chatimg, contentDescription = "")

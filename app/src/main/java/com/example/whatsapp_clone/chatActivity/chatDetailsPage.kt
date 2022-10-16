@@ -19,6 +19,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import com.example.whatsapp_clone.R
+import com.example.whatsapp_clone.ui.theme.green60
+import com.example.whatsapp_clone.ui.theme.green80
+import com.example.whatsapp_clone.ui.theme.grey60
+import com.example.whatsapp_clone.ui.theme.grey80
 import com.example.whatsapp_clone.viewmodel.FirestoreViewModel
 
 @Composable
@@ -46,7 +50,7 @@ fun chatDetailsPage(name: String, phone: String, lstseen: String?, viewModel: Fi
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color(0xFFF8F8F8))
+                .background(grey80)
                 .verticalScroll(rememberScrollState())
         ) {
 
@@ -75,16 +79,16 @@ fun chatDetailsPage(name: String, phone: String, lstseen: String?, viewModel: Fi
                 }
                 Text(text = name, fontSize = 25.sp)
                 Spacer(modifier = Modifier.height(5.dp))
-                Text(text = phone, color = Color(0xFF797979), fontSize = 18.sp)
+                Text(text = phone, color = grey60, fontSize = 18.sp)
                 Spacer(modifier = Modifier.height(5.dp))
                 lstseen?.let{
                     Box(
                         modifier = Modifier
-                            .background(color = Color(0xFFF7F7F7))
+                            .background(color = grey80)
                             .height(24.dp)
                             .padding(top = 3.dp)
                     ) {
-                        Text(text = " Last seen $lstseen ", color = Color(0xFF919191))
+                        Text(text = " Last seen $lstseen ", color = grey60)
                     }
                 }
 
@@ -218,7 +222,7 @@ fun basicOptionModel(image: Painter, name: String) {
         Spacer(modifier = Modifier.height(12.dp))
         Text(
             text = name,
-            color = Color(0xFF00A584),
+            color = green80,
             fontSize = 15.sp,
             fontWeight = FontWeight.SemiBold
         )
@@ -269,7 +273,7 @@ fun ItemSample(
             if (isRed) Text(text = optionTitle, fontSize = 15.sp, color = Color.Red)
             else Text(text = optionTitle, fontSize = 15.sp)
             if (optionDiscription != "") {
-                Text(text = optionDiscription, color = Color(0xFF818584))
+                Text(text = optionDiscription, color = grey60)
             }
         }
     }

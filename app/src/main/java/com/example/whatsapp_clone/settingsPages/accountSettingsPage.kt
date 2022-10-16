@@ -16,6 +16,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.whatsapp_clone.R
+import com.example.whatsapp_clone.ui.theme.green60
 
 @Preview(showBackground = true)
 @Composable
@@ -40,7 +41,7 @@ fun accountSettingsPage() {
     Column() {
         TopAppBar(
             elevation = 0.dp,
-            backgroundColor = Color(0xFF008268)
+            backgroundColor = green60
         ) {
             IconButton(onClick = { /*TODO*/ }) {
                 Image(painter = arrowImg, contentDescription = "")

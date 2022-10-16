@@ -15,6 +15,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.whatsapp_clone.R
 import com.example.whatsapp_clone.modelItems.callLogModel
+import com.example.whatsapp_clone.ui.theme.green60
 import com.example.whatsapp_clone.viewmodel.FirestoreViewModel
 
 @Composable
@@ -55,7 +56,7 @@ fun callPage(viewModel: FirestoreViewModel) {
     ) {
      FloatingActionButton(
          onClick = { /*TODO*/ },
-         backgroundColor = Color(0xFF008268)
+         backgroundColor = green60
      ) {
       Image(painter = addCallImg, contentDescription = "")
      }

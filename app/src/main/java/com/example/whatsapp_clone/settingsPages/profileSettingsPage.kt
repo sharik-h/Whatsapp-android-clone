@@ -27,6 +27,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import com.example.whatsapp_clone.R
+import com.example.whatsapp_clone.ui.theme.green60
+import com.example.whatsapp_clone.ui.theme.grey60
 import com.example.whatsapp_clone.viewmodel.FirestoreViewModel
 import com.google.firebase.auth.FirebaseAuth
 import java.io.ByteArrayOutputStream
@@ -67,7 +69,7 @@ fun profileSettingsPage(viewModel: FirestoreViewModel) {
 
     Column(modifier = Modifier.fillMaxSize()) {
 
-        TopAppBar(elevation = 0.dp, backgroundColor = Color(0xFF008268)) {
+        TopAppBar(elevation = 0.dp, backgroundColor = grey60) {
             IconButton(onClick = { /*TODO*/ }) {
                 Image(painter = backArrowImg, contentDescription = "")
             }
@@ -150,12 +152,12 @@ fun profileSettingsPage(viewModel: FirestoreViewModel) {
             Spacer(modifier = Modifier.width(30.dp))
             Box {
                 Column(Modifier.fillMaxWidth()) {
-                    Text(text = "Name",  color = Color(0xFF818584))
+                    Text(text = "Name",  color = grey60)
                     Text(text = myName ?: "",
                         fontSize = 15.sp,)
                     Text(
                         text = "This is not your username or pin, This name will be visible to your Whatsapp contacts.",
-                        color = Color(0xFF818584)
+                        color = grey60
                     )
                 }
                 Image(
@@ -194,7 +196,7 @@ fun profileSettingsPage(viewModel: FirestoreViewModel) {
                         onValueChange = { newName = it },
                         colors = TextFieldDefaults.textFieldColors(
                             backgroundColor = Color.Transparent,
-                            focusedIndicatorColor = Color(0xFF008268)),
+                            focusedIndicatorColor = green60),
                         textStyle = TextStyle(fontSize = 20.sp),
                     )
                 }

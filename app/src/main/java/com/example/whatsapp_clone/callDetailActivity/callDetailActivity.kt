@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import com.example.whatsapp_clone.R
 import com.example.whatsapp_clone.chatActivity.chatActivity
+import com.example.whatsapp_clone.ui.theme.green60
 import com.example.whatsapp_clone.viewmodel.FirestoreViewModel
 
 class callDetailActivity: ComponentActivity() {
@@ -59,7 +60,7 @@ class callDetailActivity: ComponentActivity() {
             TopAppBar(
                 modifier = Modifier.fillMaxWidth(),
                 elevation = 0.dp,
-                backgroundColor = Color(0xFF008F6D)
+                backgroundColor = green60
             ) {
                 IconButton(onClick = { finish() }) {
                     Image(painter = backArrowImg, contentDescription = "")

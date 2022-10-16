@@ -20,6 +20,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.whatsapp_clone.R
 import com.example.whatsapp_clone.settingActivity
+import com.example.whatsapp_clone.ui.theme.green60
+import com.example.whatsapp_clone.ui.theme.green80
 import com.example.whatsapp_clone.viewmodel.FirestoreViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
@@ -56,7 +58,7 @@ fun TabSample(viewModel: FirestoreViewModel) {
     Column(Modifier.fillMaxSize()) {
         TopAppBar(
             modifier = Modifier.fillMaxWidth(),
-            backgroundColor = Color(0xFF008268),
+            backgroundColor = green60,
         ) {
             Text(
                 text = "Whatsapp",
@@ -137,7 +139,7 @@ fun TabSample(viewModel: FirestoreViewModel) {
         }
         TabRow(
             selectedTabIndex = selectedIndex,
-            backgroundColor = Color(0xFF008268),
+            backgroundColor = green60,
             indicator = { tabPosition ->
                 TabRowDefaults.Indicator(
                     color = Color.White,
@@ -176,7 +178,7 @@ fun TabSample(viewModel: FirestoreViewModel) {
                                 text = text,
                                 fontWeight = FontWeight.Bold,
                                 color = if (pagerState.currentPage == index) Color.White
-                                else Color(0xFFB8B8B8)
+                                else green80
                             )
                         }
                     )

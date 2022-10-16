@@ -29,6 +29,8 @@ import coil.compose.rememberAsyncImagePainter
 import com.example.whatsapp_clone.R
 import com.example.whatsapp_clone.data.optionFormat
 import com.example.whatsapp_clone.settingNavigation.settingsScreen
+import com.example.whatsapp_clone.ui.theme.green60
+import com.example.whatsapp_clone.ui.theme.grey60
 import com.example.whatsapp_clone.viewmodel.FirestoreViewModel
 import com.google.firebase.auth.FirebaseAuth
 
@@ -54,7 +56,7 @@ fun MainSettings(navHostController: NavHostController, viewModel: FirestoreViewM
 
     Column(modifier = Modifier.fillMaxSize()) {
         TopAppBar(
-            backgroundColor = Color(0xFF008268),
+            backgroundColor = green60,
             elevation = 0.dp
         ) {
             IconButton(onClick = { /*TODO*/ }) {
@@ -91,7 +93,7 @@ fun MainSettings(navHostController: NavHostController, viewModel: FirestoreViewM
             Spacer(modifier = Modifier.width(10.dp))
             Column(Modifier.weight(0.5f)) {
                 Text(text = myName ?: "User", fontSize = 20.sp)
-                Text(text = "Hey there! I a using Whatsapp.", color = Color(0xFF818584))
+                Text(text = "Hey there! I a using Whatsapp.", color = grey60)
             }
             Image(painter = barCodeImg, contentDescription = "", Modifier.size(28.dp))
             Spacer(modifier = Modifier.width(15.dp))
@@ -149,7 +151,7 @@ fun settingSample(
         Spacer(modifier = Modifier.width(30.dp))
         Column(Modifier.fillMaxWidth()) {
             Text(text = optionTitle, fontSize = 15.sp)
-            Text(text = optionDiscription, color = Color(0xFF818584))
+            Text(text = optionDiscription, color = grey60)
         }
     }
 }

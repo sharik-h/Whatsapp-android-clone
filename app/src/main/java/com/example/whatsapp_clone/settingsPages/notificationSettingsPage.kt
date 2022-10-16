@@ -15,6 +15,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.whatsapp_clone.R
+import com.example.whatsapp_clone.ui.theme.green60
+import com.example.whatsapp_clone.ui.theme.grey60
 
 @Preview(showBackground = true)
 @Composable
@@ -42,7 +44,7 @@ fun notificationSettingsPage() {
     Column(modifier = Modifier.fillMaxSize()) {
         TopAppBar(
             elevation = 0.dp,
-            backgroundColor = Color(0xFF008268)
+            backgroundColor = green60
         ) {
             IconButton(onClick = { /*TODO*/ }) {
                 Image(painter = arrowImg, contentDescription = "")
@@ -83,7 +85,7 @@ fun notificationSettingsPage() {
             Text(
                 text = "Messages",
                 fontWeight = FontWeight.Bold,
-                color = Color(0xFF818584),
+                color = grey60,
                 modifier = Modifier.padding(start = 20.dp, top = 20.dp),
             )
             list2.forEach {
@@ -92,7 +94,7 @@ fun notificationSettingsPage() {
             Divider(thickness = 0.5.dp)
             Text(text = "Groups",
                 fontWeight = FontWeight.Bold,
-                color = Color(0xFF818584),
+                color = grey60,
                 modifier = Modifier.padding(start = 20.dp, top = 20.dp)
             )
             list2.forEach {
@@ -102,7 +104,7 @@ fun notificationSettingsPage() {
             Text(
                 text = "Calls",
                 fontWeight = FontWeight.Bold,
-                color = Color(0xFF818584),
+                color = grey60,
                 modifier = Modifier.padding(start = 20.dp, top = 20.dp)
             )
             list3.forEach {
@@ -130,7 +132,7 @@ fun notificationOptions(
     ) {
         Column(Modifier.weight(0.7f)) {
             Text(text = Name, fontSize = 15.sp)
-            Text(text = info, color = Color(0xFF818584))
+            Text(text = info, color = grey60)
         }
         if (radio) Switch(checked = checked, onCheckedChange = {checked = !checked})
     }

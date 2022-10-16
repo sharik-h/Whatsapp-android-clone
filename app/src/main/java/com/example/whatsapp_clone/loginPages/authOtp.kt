@@ -29,6 +29,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.whatsapp_clone.MainActivity
+import com.example.whatsapp_clone.ui.theme.green60
+import com.example.whatsapp_clone.ui.theme.green80
 import com.example.whatsapp_clone.viewmodel.FirestoreViewModel
 import com.google.firebase.FirebaseException
 import com.google.firebase.auth.FirebaseAuth
@@ -109,7 +111,7 @@ class AuthOtp(): ComponentActivity() {
                 Text(
                     text = "Verifying your number",
                     fontWeight = FontWeight.SemiBold,
-                    color = Color(0xFF008268),
+                    color = green60,
                     fontSize = 20.sp,
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center
@@ -130,10 +132,10 @@ class AuthOtp(): ComponentActivity() {
                 textStyle = TextStyle(fontSize = 20.sp, color = Color.Black, textAlign = TextAlign.Center),
                 colors = TextFieldDefaults.textFieldColors(
                     backgroundColor = Color.Transparent,
-                    focusedIndicatorColor = Color(0xFF008268),
-                    unfocusedIndicatorColor = Color(0xFF008268),
-                    cursorColor = Color(0xFF008268),
-                    textColor = Color(0xFF008268)
+                    focusedIndicatorColor = green60,
+                    unfocusedIndicatorColor = green60,
+                    cursorColor = green60,
+                    textColor = green60
                 ),
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Number,

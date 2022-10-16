@@ -28,6 +28,9 @@ import androidx.compose.ui.unit.sp
 import java.io.ByteArrayOutputStream
 import coil.compose.rememberAsyncImagePainter
 import com.example.whatsapp_clone.R
+import com.example.whatsapp_clone.ui.theme.green100
+import com.example.whatsapp_clone.ui.theme.green60
+import com.example.whatsapp_clone.ui.theme.grey60
 import com.example.whatsapp_clone.viewmodel.FirestoreViewModel
 import java.time.LocalDate
 
@@ -107,7 +110,7 @@ fun chatPerson( name: String, phone: String, msgdate: String?, viewModel: Firest
 //            .verticalScroll(rememberScrollState()),
     ) {
 
-        TopAppBar(backgroundColor = Color(0xFF008268)) {
+        TopAppBar(backgroundColor = green60) {
             Image(painter = arrowImg, contentDescription = "", Modifier.padding(5.dp))
             Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -214,7 +217,7 @@ fun chatPerson( name: String, phone: String, msgdate: String?, viewModel: Firest
                                     text = item.time.toString().dropLast(7),
                                     fontSize = 12.sp,
                                     modifier = Modifier.padding(end = 5.dp),
-                                    color = Color(0xFF7E7E7E)
+                                    color = grey60
                                 )
                                 Text(
                                     text = item.message.toString(),
@@ -233,7 +236,7 @@ fun chatPerson( name: String, phone: String, msgdate: String?, viewModel: Firest
                                 verticalAlignment = Alignment.Bottom,
                                 modifier = Modifier
                                     .clip(RoundedCornerShape(30))
-                                    .background(Color(0xFFDBFFD0))
+                                    .background(green100)
                                     .padding(vertical = 7.dp, horizontal = 10.dp)
                             ) {
                                 Text(
@@ -244,7 +247,7 @@ fun chatPerson( name: String, phone: String, msgdate: String?, viewModel: Firest
                                     text = item.time.toString().dropLast(7),
                                     fontSize = 12.sp,
                                     modifier = Modifier.padding(start = 5.dp),
-                                    color = Color(0xFF7E7E7E)
+                                    color = grey60
                                 )
                             }
                         }
@@ -261,7 +264,7 @@ fun chatPerson( name: String, phone: String, msgdate: String?, viewModel: Firest
                                   .heightIn(min = 40.dp, max = 360.dp)
                                   .widthIn(min = 40.dp, max = 280.dp)
                                   .clip(RoundedCornerShape(5))
-                                  .background(Color(0xFFDBFFD0))
+                                  .background(green100)
                                   .padding(4.dp)) {
                               val bitmap = viewModel.loadImageBitmap(context,item.message!!,"jpeg")
                               Image(
@@ -290,7 +293,7 @@ fun chatPerson( name: String, phone: String, msgdate: String?, viewModel: Firest
                                     .heightIn(min = 40.dp, max = 360.dp)
                                     .widthIn(min = 40.dp, max = 280.dp)
                                     .clip(RoundedCornerShape(5))
-                                    .background(Color(0xFFDBFFD0))
+                                    .background(green100)
                                     .padding(4.dp)) {
                                 val bitmap = viewModel.loadImageBitmap(context,item.message!!,"jpeg")
                                 Image(

@@ -24,6 +24,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.whatsapp_clone.R
+import com.example.whatsapp_clone.ui.theme.green60
+import com.example.whatsapp_clone.ui.theme.grey60
 import java.util.jar.Attributes
 
 @Preview(showBackground = true)
@@ -53,7 +55,7 @@ fun chatSettingPage() {
     )
 
     Column(Modifier.fillMaxSize()) {
-        TopAppBar(backgroundColor = Color(0xFF008268)) {
+        TopAppBar(backgroundColor = green60) {
             IconButton(onClick = { /*TODO*/ }) {
                 Image(painter = arrowImg, contentDescription = "")
             }
@@ -69,7 +71,7 @@ fun chatSettingPage() {
             Text(
                 text = "Display",
                 fontWeight = FontWeight.Bold,
-                color = Color(0xFF818584),
+                color = grey60,
                 modifier = Modifier.padding(start = 20.dp, top = 20.dp)
             )
             list1.forEach {
@@ -79,7 +81,7 @@ fun chatSettingPage() {
             Text(
                 text = "Chat settings",
                 fontWeight = FontWeight.Bold,
-                color = Color(0xFF818584),
+                color = grey60,
                 modifier = Modifier.padding(start = 20.dp, top = 20.dp)
             )
             list2.forEach {
@@ -90,7 +92,7 @@ fun chatSettingPage() {
             Text(
                 text = "Archived chats",
                 fontWeight = FontWeight.Bold,
-                color = Color(0xFF818584),
+                color = grey60,
                 modifier = Modifier.padding(start = 20.dp, top = 20.dp)
             )
             settingOptions(Icon = null, Name = list3.first, info = list3.second, radio = true)
@@ -126,7 +128,7 @@ fun settingOptions(
      Column(Modifier.weight(0.7f)) {
          Text(text = Name, fontSize = 15.sp)
          info?.let {
-             Text(text = info, color = Color(0xFF818584))
+             Text(text = info, color = grey60)
          }
 
      }

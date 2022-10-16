@@ -33,6 +33,10 @@ import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import com.example.whatsapp_clone.MainActivity
 import com.example.whatsapp_clone.R
+import com.example.whatsapp_clone.ui.theme.green60
+import com.example.whatsapp_clone.ui.theme.green80
+import com.example.whatsapp_clone.ui.theme.grey60
+import com.example.whatsapp_clone.ui.theme.grey80
 import com.example.whatsapp_clone.viewmodel.FirestoreViewModel
 import com.google.firebase.auth.FirebaseAuth
 import java.io.ByteArrayOutputStream
@@ -84,13 +88,13 @@ class profileSetupActivity: ComponentActivity() {
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth(),
                 fontSize = 23.sp,
-                color = Color(0xFF00B88D)
+                color = green80
             )
             Spacer(modifier = Modifier.height(12.dp))
             Text(
                 text = "Please provide your name and optional photo.",
                 textAlign = TextAlign.Center,
-                color = Color(0xFF858585)
+                color = grey60
             )
             Spacer(modifier = Modifier.height(25.dp))
             Box(
@@ -98,7 +102,7 @@ class profileSetupActivity: ComponentActivity() {
                 modifier = Modifier
                     .size(130.dp)
                     .clip(RoundedCornerShape(50))
-                    .background(Color(0xFFE2E2E2))
+                    .background(grey80)
                     .clickable { expanded = true }
             ) {
 
@@ -158,10 +162,10 @@ class profileSetupActivity: ComponentActivity() {
                 onValueChange = { name = it },
                 colors = TextFieldDefaults.textFieldColors(
                     backgroundColor = Color.Transparent,
-                    focusedIndicatorColor = Color(0xFF008268),
-                    unfocusedIndicatorColor = Color(0xFF008268),
-                    cursorColor = Color(0xFF008268),
-                    textColor = Color(0xFF008268)
+                    focusedIndicatorColor = green60,
+                    unfocusedIndicatorColor = green60,
+                    cursorColor = green60,
+                    textColor = green60
                 ),
             )
 
@@ -182,7 +186,7 @@ class profileSetupActivity: ComponentActivity() {
                     finishAffinity()
                     context.startActivity(Intent(context, MainActivity::class.java))
                 },
-                colors = ButtonDefaults.buttonColors(Color(0xFF008268))
+                colors = ButtonDefaults.buttonColors(green60)
             ) {
                 Text(text = "Next", color = Color.White)
             }

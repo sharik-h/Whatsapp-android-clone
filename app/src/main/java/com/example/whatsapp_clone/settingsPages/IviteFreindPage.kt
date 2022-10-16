@@ -25,6 +25,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.app.ActivityCompat
 import com.example.whatsapp_clone.R
+import com.example.whatsapp_clone.ui.theme.green60
+import com.example.whatsapp_clone.ui.theme.grey60
 
 @SuppressLint("Range")
 @Preview(showBackground = true)
@@ -35,7 +37,7 @@ fun inviteFriendPage() {
     val shareImg = painterResource(id = R.drawable.ic_baseline_share_24)
     
     Column(modifier = Modifier.fillMaxSize()) {
-        TopAppBar(backgroundColor = Color(0xFF008268)) {
+        TopAppBar(backgroundColor = green60) {
             IconButton(onClick = { /*TODO*/ }) {
                 Image(painter = arrowImg, contentDescription = "")
             }
@@ -73,7 +75,7 @@ fun inviteFriendPage() {
             Text(
                 text = "From Contacts",
                 fontWeight = FontWeight.Bold,
-                color = Color(0xFF818584),
+                color = green60,
                 modifier = Modifier.padding(12.dp),
             )
 
@@ -123,7 +125,7 @@ fun inviteableMembers(
         Spacer(modifier = Modifier.width(10.dp))
         Column(Modifier.weight(0.7f)) {
             Text(text = Name, fontSize = 16.sp)
-            Text(text = info, color = Color(0xFF818584))
+            Text(text = info, color = grey60)
         }
     }
 }

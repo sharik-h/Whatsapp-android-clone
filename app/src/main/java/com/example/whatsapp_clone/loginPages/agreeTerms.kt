@@ -15,6 +15,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.whatsapp_clone.LoginNavigation.loginScreen
+import com.example.whatsapp_clone.ui.theme.green60
+import com.example.whatsapp_clone.ui.theme.grey60
 
 @Composable
 fun agreeTerms(navHostController: NavHostController) {
@@ -29,7 +31,7 @@ fun agreeTerms(navHostController: NavHostController) {
             text = "Welcome to WhatsApp",
             fontSize = 34.sp,
             fontWeight = FontWeight.SemiBold,
-            color = Color(0xFF008268)
+            color = green60
         )
         Spacer(modifier = Modifier.height(450.dp))
         Text(
@@ -38,14 +40,14 @@ fun agreeTerms(navHostController: NavHostController) {
             fontSize = 14.sp,
             modifier = Modifier.padding(10.dp),
             textAlign = TextAlign.Center,
-            color = Color(0xFF949494)
+            color = grey60
         )
         Spacer(modifier = Modifier.height(5.dp))
         Button(
             onClick = { navHostController.navigate(loginScreen.numberPage.route) },
             shape = RoundedCornerShape(10),
             modifier = Modifier.width(275.dp),
-            colors = ButtonDefaults.buttonColors(Color(0xFF008268))
+            colors = ButtonDefaults.buttonColors(grey60)
         ) {
             Text(text = "AGREE AND CONTINUE", color = Color.White)
         }

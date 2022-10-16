@@ -24,6 +24,9 @@ import com.example.whatsapp_clone.R
 import com.example.whatsapp_clone.chatActivity.chatActivity
 import com.example.whatsapp_clone.data.detailFormat
 import com.example.whatsapp_clone.data.userDetailsFormat
+import com.example.whatsapp_clone.ui.theme.grey40
+import com.example.whatsapp_clone.ui.theme.grey60
+import com.example.whatsapp_clone.ui.theme.lightGreen
 
 @Composable
 fun chatItemModel(detailFormat: userDetailsFormat, notification: Int) {
@@ -70,7 +73,7 @@ fun chatItemModel(detailFormat: userDetailsFormat, notification: Int) {
                    detailFormat.msgdate?.let {
                        Text(
                            text = detailFormat.msgdate.toString(),
-                           color = Color(0xFF808080),
+                           color = grey60,
                            fontSize = 13.sp
                        )
                    }
@@ -80,7 +83,7 @@ fun chatItemModel(detailFormat: userDetailsFormat, notification: Int) {
                     detailFormat.lastmsg?.let {
                         Text(
                             text = detailFormat.lastmsg.toString(),
-                            color = Color(0xFF808080),
+                            color = grey60,
                             modifier = Modifier.weight(0.76f)
                         )
                     }
@@ -90,7 +93,7 @@ fun chatItemModel(detailFormat: userDetailsFormat, notification: Int) {
                           modifier = Modifier
                               .size(20.dp)
                               .clip(RoundedCornerShape(50))
-                              .background(Color(0xFF3AD861))) {
+                              .background(lightGreen)) {
                           Text(
                               text = notification.toString(),
                               color = Color.White,

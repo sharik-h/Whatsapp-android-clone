@@ -324,7 +324,7 @@ class FirestoreViewModel: ViewModel() {
     }
 
     /**
-     *  Saves the Image send to firebase storage to both sender and reciever database,
+     *  Saves the Image send to firebase storage to both sender and receiver database,
      *  and save it locally on sender device separately
      */
     fun sendImage(image: String, name: String, phone: String, extension: String, context: Context) {
@@ -389,8 +389,8 @@ class FirestoreViewModel: ViewModel() {
     }
 
     /**
-     *  Saves the status images locally, save the image into sender and reciever firebase storage database,
-     *  and updates the reciver that a new status has been added
+     *  Saves the status images locally, save the image into sender and receiver firebase storage database,
+     *  and updates the receiver that a new status has been added
      */
     fun sendStatus(image: String, context: Context, extension: String) {
         val currentTime = LocalTime.now().toString()
@@ -592,7 +592,7 @@ class FirestoreViewModel: ViewModel() {
     }
 
     /**
-     *  Increments the number of view for a stutus when we each particular status image
+     *  Increments the number of view for a status when we each particular status image
      */
     fun updateView(phone: String, name: String) {
         database.document("statusViews/$phone")

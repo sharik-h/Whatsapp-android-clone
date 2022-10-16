@@ -18,6 +18,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.whatsapp_clone.R
+import com.example.whatsapp_clone.ui.theme.green60
+import com.example.whatsapp_clone.ui.theme.grey60
 import java.lang.ProcessBuilder.Redirect.to
 
 @Preview(showBackground = true)
@@ -36,7 +38,7 @@ fun storageSettingsPage() {
     Column(modifier = Modifier
         .fillMaxSize()
         .verticalScroll(rememberScrollState())) {
-        TopAppBar(backgroundColor = Color(0xFF008268)) {
+        TopAppBar(backgroundColor = green60) {
             IconButton(onClick = { /*TODO*/ }) {
                 Image(painter = arrowImg, contentDescription = "")
             }
@@ -65,12 +67,12 @@ fun storageSettingsPage() {
         Text(
             text = "Media auto-download",
             fontWeight = FontWeight.Bold,
-            color = Color(0xFF818584),
+            color = grey60,
             modifier = Modifier.padding(start = 20.dp, top = 20.dp)
         )
         Text(
             text = "Voice messages are always automatically downloaded",
-            color = Color(0xFF818584),
+            color = grey60,
             modifier = Modifier.padding(start = 20.dp, top = 8.dp)
         )
         list.forEach {
@@ -80,12 +82,12 @@ fun storageSettingsPage() {
         Text(
             text = "Media upload quality",
             fontWeight = FontWeight.Bold,
-            color = Color(0xFF818584),
+            color = grey60,
             modifier = Modifier.padding(start = 20.dp, top = 20.dp)
         )
         Text(
             text = "Choose the quality of media files to be sent",
-            color = Color(0xFF818584),
+            color = grey60,
             modifier = Modifier.padding(start = 20.dp, top = 8.dp)
         )
         storageOptions(
@@ -121,7 +123,7 @@ fun storageOptions(
         Column(Modifier.weight(0.7f)) {
             androidx.compose.material3.Text(text = Name, fontSize = 15.sp)
             info?.let {
-                androidx.compose.material3.Text(text = info, color = Color(0xFF818584))
+                androidx.compose.material3.Text(text = info, color = grey60)
             }
 
         }

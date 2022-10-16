@@ -33,6 +33,9 @@ import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import com.example.whatsapp_clone.R
 import com.example.whatsapp_clone.chatActivity.attachmentActivity
+import com.example.whatsapp_clone.ui.theme.green60
+import com.example.whatsapp_clone.ui.theme.green80
+import com.example.whatsapp_clone.ui.theme.grey40
 import com.example.whatsapp_clone.viewmodel.FirestoreViewModel
 
 class myStatusDetailActivity: ComponentActivity() {
@@ -68,7 +71,7 @@ class myStatusDetailActivity: ComponentActivity() {
             TopAppBar(
                 modifier = Modifier.fillMaxWidth(),
                 elevation = 0.dp,
-                backgroundColor = Color(0xFF008F6D)
+                backgroundColor = green60
             ) {
                 IconButton(onClick = { finish() }) {
                     Image(painter = bArrowImg, contentDescription = "")
@@ -103,7 +106,7 @@ class myStatusDetailActivity: ComponentActivity() {
                 textAlign = TextAlign.Center,
                 fontWeight = FontWeight.SemiBold,
                 fontSize = 12.sp,
-                color = Color(0xFF4E4E4E)
+                color = grey40
             )
         }
         Column(
@@ -116,7 +119,7 @@ class myStatusDetailActivity: ComponentActivity() {
             FloatingActionButton(
                 modifier = Modifier.size(57.dp),
                 shape = RoundedCornerShape(50),
-                containerColor = Color(0xFF01AA88),
+                containerColor = green80,
                 onClick = { glauncher.launch("image/*") }) {
                 Image(painter = cameraImg, contentDescription = "")
             }
@@ -166,7 +169,7 @@ fun StatusItem(
                 fontSize = 18.sp,
                 fontWeight = FontWeight.SemiBold
             )
-            Text(text = time, color = Color(0xFF616161))
+            Text(text = time, color = grey40)
         }
         Spacer(modifier = Modifier.weight(0.5f))
         IconButton(onClick = { expanded = true }) {

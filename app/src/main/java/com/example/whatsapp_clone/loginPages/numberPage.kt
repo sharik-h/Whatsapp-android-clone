@@ -29,6 +29,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.whatsapp_clone.R
+import com.example.whatsapp_clone.ui.theme.green60
 
 @Preview(showBackground = true)
 @Composable
@@ -50,7 +51,7 @@ fun numberPage() {
         ) {
             Text(
                 text = "Enter your phone number",
-                color = Color(0xFF008268),
+                color = green60,
                 fontWeight = FontWeight.SemiBold,
                 fontSize = 20.sp,
                 modifier = Modifier.fillMaxWidth(),
@@ -77,7 +78,7 @@ fun numberPage() {
             Image(painter = arrowImg, contentDescription = "")
             Divider(
                 thickness = 1.dp,
-                color = Color(0xFF008268),
+                color = green60,
                 modifier = Modifier.padding(top = 30.dp)
             )
             DropdownMenu(
@@ -118,7 +119,7 @@ fun numberPage() {
         ) {
             Box(modifier = Modifier.width(60.dp), contentAlignment = Alignment.BottomCenter) {
                 Text(text = n1, fontSize = 25.sp)
-                Divider(thickness = 1.dp, color = Color(0xFF008268))
+                Divider(thickness = 1.dp, color = green60)
             }
             TextField(
                 value = number,
@@ -130,10 +131,10 @@ fun numberPage() {
                 textStyle = TextStyle(fontSize = 20.sp, color = Color.Black),
                 colors = TextFieldDefaults.textFieldColors(
                     backgroundColor = Color.Transparent,
-                    focusedIndicatorColor = Color(0xFF008268),
-                    unfocusedIndicatorColor = Color(0xFF008268),
-                    cursorColor = Color(0xFF008268),
-                    textColor = Color(0xFF008268)
+                    focusedIndicatorColor = green60,
+                    unfocusedIndicatorColor = green60,
+                    cursorColor = green60,
+                    textColor = green60
                 ),
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Number,
@@ -164,7 +165,7 @@ fun numberPage() {
                 }
             } ,
             shape = RoundedCornerShape(10),
-            colors = ButtonDefaults.buttonColors(Color(0xFF008268))
+            colors = ButtonDefaults.buttonColors(green60)
         ) {
             Text(text = "Next", color = Color.White)
         }
