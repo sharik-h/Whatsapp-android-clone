@@ -1,9 +1,15 @@
 package com.example.whatsapp_clone.mainPage
 
 import android.content.Intent
+import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.result.launch
 import androidx.activity.viewModels
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -19,6 +25,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.whatsapp_clone.R
+import com.example.whatsapp_clone.chatActivity.attachmentActivity
 import com.example.whatsapp_clone.settingActivity
 import com.example.whatsapp_clone.ui.theme.green60
 import com.example.whatsapp_clone.ui.theme.green80
@@ -28,6 +35,7 @@ import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.pagerTabIndicatorOffset
 import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.launch
+import java.io.ByteArrayOutputStream
 
 
 class TabActivity: ComponentActivity() {
@@ -54,6 +62,19 @@ fun TabSample(viewModel: FirestoreViewModel) {
     val optionsImg = painterResource(id = R.drawable.option_img)
     val searchImg = painterResource(id = R.drawable.search_img)
     val context = LocalContext.current
+    var imageUri by remember { mutableStateOf<Uri?>(null) }
+    val clauncher =
+        rememberLauncherForActivityResult(contract = ActivityResultContracts.TakePicturePreview()) {
+            val bytes = ByteArrayOutputStream()
+            it.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
+            val path =
+                MediaStore.Images.Media.insertImage(context.contentResolver, it, "Title", null)
+            imageUri = Uri.parse(path.toString())
+            context.startActivity(
+                Intent(context, attachmentActivity::class.java)
+                    .putExtra("imageUri", imageUri.toString())
+            )
+        }
 
     Column(Modifier.fillMaxSize()) {
         TopAppBar(
@@ -189,6 +210,7 @@ fun TabSample(viewModel: FirestoreViewModel) {
             if (tabsList[pagerState.currentPage] == "CALLS") callPage(viewModel)
             else if (tabsList[pagerState.currentPage] == "CHATS") chatPage(viewModel)
             else if (tabsList[pagerState.currentPage] == "STATUS") statusPage(viewModel)
+            else if (tabsList[pagerState.currentPage] == "CAMERA") clauncher.launch()
             else Text(text = tabsList[pagerState.currentPage])
         }
     }

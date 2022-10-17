@@ -41,6 +41,7 @@
         <activity android:name=".satusActivity.myStatusDetailActivity"/>
         <activity android:name=".callDetailActivity.callDetailActivity"/>
         <activity android:name=".mainPage.TabActivity"/>
+        <activity android:name=".chatActivity.SelectUserActivity" />
     </application>
 
 </manifest>

@@ -1,5 +1,6 @@
 package com.example.whatsapp_clone.chatActivity
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -128,7 +129,12 @@ class attachmentActivity: ComponentActivity() {
                     onClick = {
                         val currentTime = LocalTime.now().toString()
                         val currentDate = LocalDate.now().toString()
-                        if (phone != null) {
+                        if (phone == null && name == null) {
+                            context.startActivity(
+                                Intent(context, SelectUserActivity::class.java)
+                                    .putExtra("imageUri", imageUri.toString())
+                            )
+                        } else if (phone != null) {
                             viewModel.sendMessage(
                                 phone = phone,
                                 message = "$currentDate$currentTime",
