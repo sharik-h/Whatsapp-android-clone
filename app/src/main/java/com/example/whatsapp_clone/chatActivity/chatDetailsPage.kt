@@ -19,7 +19,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import com.example.whatsapp_clone.R
-import com.example.whatsapp_clone.ui.theme.green60
 import com.example.whatsapp_clone.ui.theme.green80
 import com.example.whatsapp_clone.ui.theme.grey60
 import com.example.whatsapp_clone.ui.theme.grey80

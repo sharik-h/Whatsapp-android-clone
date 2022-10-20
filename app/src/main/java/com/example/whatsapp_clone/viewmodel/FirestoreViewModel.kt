@@ -7,7 +7,6 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.ImageDecoder
 import android.net.Uri
-import android.util.Log
 import androidx.core.net.toUri
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -23,7 +22,6 @@ import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.time.LocalDate
 import java.time.LocalTime
-import kotlin.collections.ArrayList
 
 class FirestoreViewModel: ViewModel() {
 

@@ -1,8 +1,6 @@
 package com.example.whatsapp_clone.settingsPages
 
 import android.annotation.SuppressLint
-import android.app.Activity
-import android.content.pm.PackageManager
 import android.provider.ContactsContract
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -20,16 +18,13 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.app.ActivityCompat
 import com.example.whatsapp_clone.R
 import com.example.whatsapp_clone.ui.theme.green60
 import com.example.whatsapp_clone.ui.theme.grey60
 
 @SuppressLint("Range")
-@Preview(showBackground = true)
 @Composable
 fun inviteFriendPage() {
     val arrowImg = painterResource(id = R.drawable.arrow_back)

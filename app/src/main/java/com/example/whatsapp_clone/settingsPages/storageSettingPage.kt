@@ -1,6 +1,5 @@
 package com.example.whatsapp_clone.settingsPages
 
-import android.provider.Contacts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -14,15 +13,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.whatsapp_clone.R
 import com.example.whatsapp_clone.ui.theme.green60
 import com.example.whatsapp_clone.ui.theme.grey60
-import java.lang.ProcessBuilder.Redirect.to
 
-@Preview(showBackground = true)
 @Composable
 fun storageSettingsPage() {
     val arrowImg = painterResource(id = R.drawable.arrow_back)
